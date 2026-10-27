@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Психологические услуги — Элегантный минимализм</title>
+  <style>
+    :root {
+      --butter-cream: #F7F4EE;
+      --denim: #2B4C6F;
+      --powder-blue: #8E9CA3;
+      --section-bg: #d8e3e9;
+      --text-dark: #2C2C2C;
+      --terracotta: #B87D64;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--butter-cream);
+      color: var(--text-dark);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* SVG-шум для фактурности "шершавости" */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.55;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* Шапка сайта */
+    header {
+      background-color: #FAF8F3;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(43, 76, 111, 0.1);
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      font-family: "Playfair Display", serif;
+      font-size: 1.2rem;
+      color: var(--denim);
+    }
+
+    /* Кнопки в шапке с эффектом желе */
+    .header-btn {
+      background-color: var(--butter-cream);
+      border: 1px solid rgba(43, 76, 111, 0.2);
+      padding: 10px 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-btn:active, .header-btn:hover {
+      transform: scale(0.96);
+    }
+
+    /* Спецкнопка "Статьи" с 3D-морфингом */
+    .articles-btn-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      background: var(--butter-cream);
+      border-radius: 30px;
+      padding: 4px;
+      border: 1px solid rgba(43, 76, 111, 0.2);
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .morphing-capsule {
+      width: 14px;
+      height: 28px;
+      background: linear-gradient(135deg, #a05a42, #7a3c28);
+      border-radius: 14px;
+      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    .articles-btn-wrapper:hover .morphing-capsule {
+      width: 42px; /* Растягивается влево полусферой */
+      box-shadow: inset 0 3px 6px rgba(255,255,255,0.4), 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .articles-text {
+      padding: 6px 14px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    /* Главный блок / Слайдер */
+    .hero-section {
+      padding: 40px 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 2.2rem;
+      color: var(--text-dark);
+      line-height: 1.2;
+      margin-bottom: 24px;
+      font-weight: 400;
+    }
+
+    /* Слайдер с нулевыми зазорами рамки */
+    .slider-container {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(43, 76, 111, 0.1);
+      border: 6px solid #FAF8F3;
+      background: #000;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      transform: translateX(100%);
+      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    .slide.active {
+      transform: translateX(0);
+      z-index: 2;
+    }
+
+    .slide.incoming {
+      z-index: 3;
+      transform: translateX(0);
+    }
+
+    /* Визуальный таймер с легкой сепией и прозрачностью */
+    .timer-pagination {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 10;
+      background: rgba(247, 244, 238, 0.25);
+      backdrop-filter: blur(6px);
+      padding: 6px 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .dot-indicator {
+      position: relative;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(44, 44, 44, 0.25);
+      overflow: hidden;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.5s;
+      cursor: pointer;
+    }
+
+    .dot-indicator.active {
+      width: 60px;
+      border-radius: 10px;
+    }
+
+    .dot-indicator .fill {
+      position: absolute;
+      top: 0; left: 0; height: 100%; width: 0%;
+      background: rgba(43, 76, 111, 0.65);
+      border-radius: 10px;
+    }
+
+    .dot-indicator.active .fill {
+      animation: fillProgress 10s linear forwards;
+    }
+
+    @keyframes fillProgress {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+
+    /* Раздел подхода и ветки суми-э */
+    .approach-section {
+      background-color: var(--section-bg);
+      padding: 50px 20px;
+      margin-top: 40px;
+      border-radius: 24px 24px 0 0;
+      position: relative;
+    }
+
+    .approach-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 500px;
+      margin: 0 auto;
+      gap: 20px;
+    }
+
+    .ink-tree {
+      width: 140px;
+      height: 200px;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Психолог</div>
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <button class="header-btn">Записаться</button>
+      <div class="articles-btn-wrapper">
+        <div class="morphing-capsule"></div>
+        <span class="articles-text">Статьи</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero-section">
+    <h1>Смотреть на человека целостно</h1>
+    
+    <div class="slider-container">
+      <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80');"></div>
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80');"></div>
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80');"></div>
+
+      <div class="timer-pagination">
+        <div class="dot-indicator active"><div class="fill"></div></div>
+        <div class="dot-indicator"><div class="fill"></div></div>
+        <div class="dot-indicator"><div class="fill"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="approach-section">
+    <div class="approach-content">
+      <div>
+        <h3 style="font-family: serif; font-size: 1.4rem; margin-bottom: 10px; color: var(--denim);">Мой подход</h3>
+        <p style="font-size: 0.95rem; line-height: 1.5; color: #4A5568;">Психодинамический подход в сочетании с биопсихосоциальной моделью...</p>
+      </div>
+      <!-- Ветка суми-э с листочками цвета деним с мазковой текстурой -->
+      <svg class="ink-tree" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
+        <path d="M40 260 Q60 180 80 120 T110 40" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M75 140 Q110 110 140 90" fill="none" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="M65 170 Q30 140 20 110" fill="none" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Листики цвета Деним с эффектом мазков масла -->
+        <ellipse cx="145" cy="85" rx="10" ry="5" fill="#2B4C6F" transform="rotate(-25 145 85)" opacity="0.9" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
+        <ellipse cx="15" cy="105" rx="9" ry="4" fill="#2B4C6F" transform="rotate(35 15 105)" opacity="0.85" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
+        <ellipse cx="115" cy="35" rx="8" ry="4" fill="#2B4C6F" transform="rotate(-10 115 35)" opacity="0.9" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
+      </svg>
+    </div>
+  </section>
+
+  <script>
+    // Простой скрипт слайдера с таймером
+    document.addEventListener("DOMContentLoaded", () => {
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".dot-indicator");
+      let currentIndex = 0;
+
+      function goToSlide(nextIndex) {
+        if (nextIndex === currentIndex) return;
+        const currentSlide = slides[currentIndex];
+        const nextSlide = slides[nextIndex];
+
+        nextSlide.style.transition = "none";
+        nextSlide.style.transform = "translateX(100%)";
+        nextSlide.classList.remove("active");
+        void nextSlide.offsetWidth;
+
+        nextSlide.style.transition = "transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)";
+        nextSlide.classList.add("incoming");
+
+        dots[currentIndex].classList.remove("active");
+        dots[nextIndex].classList.add("active");
+
+        setTimeout(() => {
+          currentSlide.classList.remove("active");
+          nextSlide.classList.remove("incoming");
+          nextSlide.classList.add("active");
+          currentIndex = nextIndex;
+        }, 1200);
+      }
+
+      setInterval(() => {
+        const nextIndex = (currentIndex + 1) % slides.length;
+        goToSlide(nextIndex);
+      }, 10000);
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => goToSlide(index));
+      });
+    });
+  </script>
+</body>
+</html>
