@@ -23,13 +23,21 @@
     body {
       background-color: var(--butter-cream);
       color: var(--text-dark);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow-x: hidden;
+    }
+
+    /* Скрываем сам элемент SVG-фильтра, так как он технический */
+    .svg-filter-hidden {
+      position: absolute;
+      width: 0;
+      height: 0;
+      pointer-events: none;
     }
 
     /* ==========================================================
        1. ЛОКАЛЬНЫЙ SVG-ШУМ (.noise-texture)
-       Применяется только к отдельным секциям (не на весь body)
+       Работает через прямой SVG-фильтр (100% поддержка браузеров)
        ========================================================== */
     .noise-texture {
       position: relative;
@@ -39,13 +47,14 @@
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
-      opacity: 0.4;
+      background: #000;
+      filter: url(#grainNoise); /* Подключаем SVG-фильтр из HTML */
+      opacity: 0.12; /* <-- НАСТРОЙКА ИНТЕНСИВНОСТИ ШУМА (0.05 до 0.25) */
       pointer-events: none;
       z-index: 1;
     }
 
-    /* Шапка сайта (с SVG-шумом) */
+    /* Шапка сайта */
     header {
       background-color: #FAF8F3;
       padding: 16px 24px;
@@ -53,17 +62,19 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(43, 76, 111, 0.1);
-      position: relative;
-      z-index: 10;
     }
 
     .logo {
-      font-family: "Playfair Display", serif;
+      font-family: serif;
       font-size: 1.2rem;
       color: var(--denim);
+      position: relative;
+      z-index: 2;
     }
 
     .header-btn {
+      position: relative;
+      z-index: 2;
       background-color: var(--butter-cream);
       border: 1px solid rgba(43, 76, 111, 0.2);
       padding: 10px 18px;
@@ -78,27 +89,28 @@
       transform: scale(0.96);
     }
 
-    /* Главный блок / Слайдер (С SVG-шумом) */
+    /* Главный блок / Слайдер */
     .hero-section {
       padding: 40px 20px;
       max-width: 600px;
       margin: 0 auto;
       text-align: center;
-      position: relative;
-      z-index: 2;
     }
 
     h1 {
-      font-family: "Playfair Display", Georgia, serif;
+      font-family: serif;
       font-size: 2.2rem;
       color: var(--text-dark);
       line-height: 1.2;
       margin-bottom: 24px;
       font-weight: 400;
+      position: relative;
+      z-index: 2;
     }
 
     .slider-container {
       position: relative;
+      z-index: 2;
       width: 100%;
       height: 480px;
       border-radius: 20px;
@@ -137,11 +149,11 @@
       align-items: center;
       gap: 10px;
       z-index: 10;
-      background: rgba(247, 244, 238, 0.25);
+      background: rgba(247, 244, 238, 0.35);
       backdrop-filter: blur(6px);
       padding: 6px 12px;
       border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     .dot-indicator {
@@ -149,7 +161,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(44, 44, 44, 0.25);
+      background: rgba(44, 44, 44, 0.3);
       overflow: hidden;
       transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.5s;
       cursor: pointer;
@@ -163,7 +175,7 @@
     .dot-indicator .fill {
       position: absolute;
       top: 0; left: 0; height: 100%; width: 0%;
-      background: rgba(43, 76, 111, 0.65);
+      background: var(--denim);
       border-radius: 10px;
     }
 
@@ -178,24 +190,25 @@
 
     /* ==========================================================
        2. ИЗОЛИРОВАННЫЙ MULTI-LAYER BACKGROUND (БЕЗ SVG-ШУМА)
-       Применяется ТОЛЬКО к блоку «Мой подход»
+       Объемный текстурный фон мастихина для блока «Мой подход»
        ========================================================== */
     .approach-section {
       position: relative;
-      z-index: 2;
+      z-index: 5;
       padding: 60px 20px;
       margin-top: 40px;
       border-radius: 24px 24px 0 0;
       
-      /* Чистый многослойный фон мастихина */
+      /* Базовый оттенок */
       background-color: var(--section-bg);
-      background-image: 
-        radial-gradient(circle at 12% 25%, rgba(43, 76, 111, 0.12) 0%, transparent 45%),
-        radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.45) 0%, transparent 55%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 35%, rgba(43, 76, 111, 0.08) 65%, transparent 100%);
       
-      background-blend-mode: normal, soft-light, overlay;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+      /* Четко видимые мазки краски через наложение градиентов */
+      background-image: 
+        radial-gradient(ellipse at 15% 20%, rgba(43, 76, 111, 0.22) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 80%, rgba(255, 255, 255, 0.6) 0%, transparent 55%),
+        linear-gradient(125deg, rgba(255, 255, 255, 0.35) 0%, transparent 40%, rgba(43, 76, 111, 0.15) 75%, transparent 100%);
+      
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), 0 -10px 20px rgba(0,0,0,0.03);
     }
 
     .approach-content {
@@ -218,13 +231,22 @@
 </head>
 <body>
 
-  <!-- Шапка с локальным SVG-шумом -->
+  <!-- 0. Встроенный SVG-фильтр зернистости (решает проблему блокировок браузера) -->
+  <svg class="svg-filter-hidden">
+    <filter id="grainNoise">
+      <!-- baseFrequency: 0.65 — идеальный масштаб зерна песка/бумаги -->
+      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise" />
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+    </filter>
+  </svg>
+
+  <!-- 1. Шапка с SVG-шумом -->
   <header class="noise-texture">
     <div class="logo">Психолог</div>
     <button class="header-btn">Записаться</button>
   </header>
 
-  <!-- Главный блок с локальным SVG-шумом -->
+  <!-- 2. Главный блок с SVG-шумом -->
   <section class="hero-section noise-texture">
     <h1>Смотреть на человека целостно</h1>
     
@@ -241,7 +263,7 @@
     </div>
   </section>
 
-  <!-- Блок "Мой подход" БЕЗ класса noise-texture (ТОЛЬКО многослойный градиент) -->
+  <!-- 3. Блок "Мой подход" БЕЗ SVG-шума (ТОЛЬКО объемный многослойный градиент-мастихин) -->
   <section class="approach-section">
     <div class="approach-content">
       <div>
