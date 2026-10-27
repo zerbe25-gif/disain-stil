@@ -199,18 +199,26 @@
       margin-top: 40px;
       border-radius: 24px 24px 0 0;
       
-      /* Базовый оттенок */
+      /* Базовый оттенок секции */
       background-color: var(--section-bg);
       
-      /* Четко видимые мазки краски через наложение градиентов */
+      /* Набор вытянутых эллипсов и диагональных линий, имитирующих мазки кистью/мастихином */
       background-image: 
-        radial-gradient(ellipse at 15% 20%, rgba(43, 76, 111, 0.4) 0%, transparent 50%),
-        radial-gradient(ellipse at 85% 80%, rgba(255, 255, 255, 0.5) 0%, transparent 55%),
-        linear-gradient(125deg, rgba(255, 255, 255, 0.35) 0%, transparent 40%, rgba(43, 76, 111, 0.15) 75%, transparent 100%);
+        /* Мазок 1: Широкий диагональный светлый мазок */
+        linear-gradient(135deg, transparent 15%, rgba(255, 255, 255, 0.55) 35%, rgba(255, 255, 255, 0.2) 50%, transparent 70%),
+        /* Мазок 2: Глубокий темный акцентный мазок (цвет деним) */
+        linear-gradient(45deg, transparent 20%, rgba(43, 76, 111, 0.18) 40%, rgba(43, 76, 111, 0.08) 60%, transparent 80%),
+        /* Мазок 3: Вытянутое горизонтальное светлое пятно краски */
+        radial-gradient(ellipse 70% 30% at 30% 40%, rgba(255, 255, 255, 0.6) 0%, transparent 70%),
+        /* Мазок 4: Плотное темное пятно полутень */
+        radial-gradient(ellipse 50% 40% at 75% 60%, rgba(43, 76, 111, 0.22) 0%, transparent 65%);
       
-      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), 0 -10px 20px rgba(0,0,0,0.03);
+      /* Режим смешивания слоев для создания эффекта масляной краски */
+      background-blend-mode: overlay, normal, soft-light, multiply;
+      
+      box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.7), 0 -10px 20px rgba(0,0,0,0.03);
     }
-
+    
     .approach-content {
       display: flex;
       justify-content: space-between;
