@@ -28,21 +28,20 @@
       position: relative;
     }
 
-    /* SVG-шум для фактурности "шершавости" */
+    /* 1. SVG-шум для фактурности "шершавости" на остальной части сайта */
     body::before {
       content: "";
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      /* Изменили baseFrequency на 0.8 (зерно стало крупнее) и opacity внутри SVG на 0.25 */
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.05' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
-      opacity: 0.3; /* Общая видимость слоя */
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
+      opacity: 0.8;
       pointer-events: none;
       z-index: 999;
     }
 
     /* Шапка сайта */
     header {
-      background-color: #EBEAE8;
+      background-color: #FAF8F3;
       padding: 16px 24px;
       display: flex;
       justify-content: space-between;
@@ -58,7 +57,6 @@
       color: var(--denim);
     }
 
-    /* Кнопки в шапке с эффектом желе */
     .header-btn {
       background-color: var(--butter-cream);
       border: 1px solid rgba(43, 76, 111, 0.2);
@@ -77,45 +75,14 @@
       transform: scale(0.96);
     }
 
-    /* Спецкнопка "Статьи" с 3D-морфингом */
-    .articles-btn-wrapper {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      background: var(--butter-cream);
-      border-radius: 30px;
-      padding: 4px;
-      border: 1px solid rgba(43, 76, 111, 0.2);
-      cursor: pointer;
-      overflow: hidden;
-    }
-
-    .morphing-capsule {
-      width: 14px;
-      height: 28px;
-      background: linear-gradient(135deg, #a05a42, #bc4c26);
-      border-radius: 14px;
-      transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
-      box-shadow: inset 0 2px 4px rgba(255,255,255,0.3), 0 2px 6px rgba(0,0,0,0.15);
-    }
-
-    .articles-btn-wrapper:hover .morphing-capsule {
-      width: 42px; /* Растягивается влево полусферой */
-      box-shadow: inset 0 3px 6px rgba(255,255,255,0.4), 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    .articles-text {
-      padding: 6px 14px;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
     /* Главный блок / Слайдер */
     .hero-section {
       padding: 40px 20px;
       max-width: 600px;
       margin: 0 auto;
       text-align: center;
+      position: relative;
+      z-index: 2;
     }
 
     h1 {
@@ -127,7 +94,6 @@
       font-weight: 400;
     }
 
-    /* Слайдер с нулевыми зазорами рамки */
     .slider-container {
       position: relative;
       width: 100%;
@@ -159,7 +125,6 @@
       transform: translateX(0);
     }
 
-    /* Визуальный таймер с легкой сепией и прозрачностью */
     .timer-pagination {
       position: absolute;
       bottom: 20px;
@@ -208,13 +173,31 @@
       to { width: 100%; }
     }
 
-    /* Раздел подхода и ветки суми-э */
+    /* ==========================================================
+       2. MULTI-LAYER BACKGROUNDS (Многослойный фон мазками мастихина)
+       Используется ТОЛЬКО для блока «Мой подход»
+       ========================================================== */
     .approach-section {
-      background-color: var(--section-bg);
-      padding: 50px 20px;
+      position: relative;
+      z-index: 2;
+      padding: 60px 20px;
       margin-top: 40px;
       border-radius: 24px 24px 0 0;
-      position: relative;
+      
+      /* Базовый цвет */
+      background-color: var(--section-bg);
+      
+      /* Многослойное наложение полупрозрачных радиальных и линейных градиентов */
+      background-image: 
+        /* Слой 1: Мягкое боковое затемнение (виньетка) для глубины */
+        radial-gradient(circle at 10% 20%, rgba(43, 76, 111, 0.08) 0%, transparent 50%),
+        /* Слой 2: Теплый световой блик в центре (имитация объема пастозной краски) */
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.35) 0%, transparent 60%),
+        /* Слой 3: Диагональные полосы-мазки мастихина под углом 45 градусов */
+        linear-gradient(45deg, rgba(255, 255, 255, 0.15) 0%, transparent 40%, rgba(43, 76, 111, 0.06) 70%, transparent 100%);
+        
+      background-blend-mode: overlay, normal, soft-light;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
 
     .approach-content {
@@ -237,13 +220,7 @@
 
   <header>
     <div class="logo">Психолог</div>
-    <div style="display: flex; gap: 10px; align-items: center;">
-      <button class="header-btn">Записаться</button>
-      <div class="articles-btn-wrapper">
-        <div class="morphing-capsule"></div>
-        <span class="articles-text">Статьи</span>
-      </div>
-    </div>
+    <button class="header-btn">Записаться</button>
   </header>
 
   <section class="hero-section">
@@ -262,18 +239,17 @@
     </div>
   </section>
 
+  <!-- Блок с многослойным градиентом (мазки мастихином) -->
   <section class="approach-section">
     <div class="approach-content">
       <div>
         <h3 style="font-family: serif; font-size: 1.4rem; margin-bottom: 10px; color: var(--denim);">Мой подход</h3>
         <p style="font-size: 0.95rem; line-height: 1.5; color: #4A5568;">Психодинамический подход в сочетании с биопсихосоциальной моделью...</p>
       </div>
-      <!-- Ветка суми-э с листочками цвета деним с мазковой текстурой -->
       <svg class="ink-tree" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
         <path d="M40 260 Q60 180 80 120 T110 40" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round"/>
         <path d="M75 140 Q110 110 140 90" fill="none" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
         <path d="M65 170 Q30 140 20 110" fill="none" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round"/>
-        <!-- Листики цвета Деним с эффектом мазков масла -->
         <ellipse cx="145" cy="85" rx="10" ry="5" fill="#2B4C6F" transform="rotate(-25 145 85)" opacity="0.9" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
         <ellipse cx="15" cy="105" rx="9" ry="4" fill="#2B4C6F" transform="rotate(35 15 105)" opacity="0.85" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
         <ellipse cx="115" cy="35" rx="8" ry="4" fill="#2B4C6F" transform="rotate(-10 115 35)" opacity="0.9" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
@@ -282,7 +258,6 @@
   </section>
 
   <script>
-    // Простой скрипт слайдера с таймером
     document.addEventListener("DOMContentLoaded", () => {
       const slides = document.querySelectorAll(".slide");
       const dots = document.querySelectorAll(".dot-indicator");
