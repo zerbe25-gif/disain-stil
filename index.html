@@ -204,11 +204,11 @@
       
       /* Хаотичные мазки в разные стороны за счет турбулентного SVG-паттерна */
       background-image: 
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='chaosBrush'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.15 0.4' numOctaves='4' stitchTiles='stitch' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.16  0 0 0 0 0.27  0 0 0 0 0.38  0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23chaosBrush)'/%3E%3C/svg%3E"),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='chaosBrush'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.2 0.6' numOctaves='4' stitchTiles='stitch' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.16  0 0 0 0 0.27  0 0 0 0 0.38  0 0 0 0.22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23chaosBrush)'/%3E%3C/svg%3E"),
         radial-gradient(ellipse 60% 50% at 20% 30%, rgba(255, 255, 255, 0.45) 0%, transparent 70%),
         radial-gradient(ellipse 50% 60% at 80% 70%, rgba(43, 76, 111, 0.15) 0%, transparent 65%);
       
-      background-size: 260px 260px, 100% 100%, 100% 100%;
+      background-size: 360px 360px, 100% 100%, 100% 100%;
       background-repeat: repeat, no-repeat, no-repeat;
       background-blend-mode: overlay, normal, soft-light;
       
