@@ -25,21 +25,27 @@
       color: var(--text-dark);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
       overflow-x: hidden;
+    }
+
+    /* ==========================================================
+       1. ЛОКАЛЬНЫЙ SVG-ШУМ (.noise-texture)
+       Применяется только к отдельным секциям (не на весь body)
+       ========================================================== */
+    .noise-texture {
       position: relative;
     }
 
-    /* 1. SVG-шум для фактурности "шершавости" на остальной части сайта */
-    body::before {
+    .noise-texture::before {
       content: "";
-      position: fixed;
+      position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
-      opacity: 0.8;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
+      opacity: 0.3;
       pointer-events: none;
-      z-index: 999;
+      z-index: 1;
     }
 
-    /* Шапка сайта */
+    /* Шапка сайта (с SVG-шумом) */
     header {
       background-color: #FAF8F3;
       padding: 16px 24px;
@@ -65,17 +71,14 @@
       cursor: pointer;
       font-size: 0.9rem;
       color: var(--text-dark);
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .header-btn:active, .header-btn:hover {
       transform: scale(0.96);
     }
 
-    /* Главный блок / Слайдер */
+    /* Главный блок / Слайдер (С SVG-шумом) */
     .hero-section {
       padding: 40px 20px;
       max-width: 600px;
@@ -174,8 +177,8 @@
     }
 
     /* ==========================================================
-       2. MULTI-LAYER BACKGROUNDS (Многослойный фон мазками мастихина)
-       Используется ТОЛЬКО для блока «Мой подход»
+       2. ИЗОЛИРОВАННЫЙ MULTI-LAYER BACKGROUND (БЕЗ SVG-ШУМА)
+       Применяется ТОЛЬКО к блоку «Мой подход»
        ========================================================== */
     .approach-section {
       position: relative;
@@ -184,20 +187,15 @@
       margin-top: 40px;
       border-radius: 24px 24px 0 0;
       
-      /* Базовый цвет */
+      /* Чистый многослойный фон мастихина */
       background-color: var(--section-bg);
-      
-      /* Многослойное наложение полупрозрачных радиальных и линейных градиентов */
       background-image: 
-        /* Слой 1: Мягкое боковое затемнение (виньетка) для глубины */
-        radial-gradient(circle at 10% 20%, rgba(43, 76, 111, 0.08) 0%, transparent 50%),
-        /* Слой 2: Теплый световой блик в центре (имитация объема пастозной краски) */
-        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.35) 0%, transparent 60%),
-        /* Слой 3: Диагональные полосы-мазки мастихина под углом 45 градусов */
-        linear-gradient(45deg, rgba(255, 255, 255, 0.15) 0%, transparent 40%, rgba(43, 76, 111, 0.06) 70%, transparent 100%);
-        
-      background-blend-mode: overlay, normal, soft-light;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        radial-gradient(circle at 12% 25%, rgba(43, 76, 111, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 75%, rgba(255, 255, 255, 0.45) 0%, transparent 55%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 35%, rgba(43, 76, 111, 0.08) 65%, transparent 100%);
+      
+      background-blend-mode: normal, soft-light, overlay;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
     }
 
     .approach-content {
@@ -207,6 +205,8 @@
       max-width: 500px;
       margin: 0 auto;
       gap: 20px;
+      position: relative;
+      z-index: 2;
     }
 
     .ink-tree {
@@ -218,12 +218,14 @@
 </head>
 <body>
 
-  <header>
+  <!-- Шапка с локальным SVG-шумом -->
+  <header class="noise-texture">
     <div class="logo">Психолог</div>
     <button class="header-btn">Записаться</button>
   </header>
 
-  <section class="hero-section">
+  <!-- Главный блок с локальным SVG-шумом -->
+  <section class="hero-section noise-texture">
     <h1>Смотреть на человека целостно</h1>
     
     <div class="slider-container">
@@ -239,7 +241,7 @@
     </div>
   </section>
 
-  <!-- Блок с многослойным градиентом (мазки мастихином) -->
+  <!-- Блок "Мой подход" БЕЗ класса noise-texture (ТОЛЬКО многослойный градиент) -->
   <section class="approach-section">
     <div class="approach-content">
       <div>
