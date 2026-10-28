@@ -7,13 +7,10 @@
   <style>
     :root {
       --butter-cream: #F7F4EE;
-      --denim: #2B4C6F;
-      --sage-teal: #5C8C8D; /* Обновленный цвет */
-      --powder-blue: #8E9CA3;
-      --section-bg: #5C8C8D; /* Новый цвет фона средней части */
+      --section-bg-dark: #5C8C8D; /* Фон для средней части */
       --text-dark: #2C2C2C;
       --text-light: #F7F4EE;
-      --terracotta: #B87D64;
+      --hero-bg: #FFFFFF; /* Белый фон для верхней части */
     }
 
     * {
@@ -29,7 +26,7 @@
       overflow-x: hidden;
     }
 
-    /* Технический скрытый контейнер для SVG-фильтров */
+    /* Технический скрытый контейнер для SVG-фильтра */
     .svg-filter-hidden {
       position: absolute;
       width: 0;
@@ -44,7 +41,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(92, 140, 141, 0.15);
+      border-bottom: 1px solid rgba(43, 76, 111, 0.1);
       position: relative;
       z-index: 10;
     }
@@ -52,12 +49,12 @@
     .logo {
       font-family: serif;
       font-size: 1.2rem;
-      color: var(--sage-teal);
+      color: var(--section-bg-dark);
     }
 
     .header-btn {
       background-color: var(--butter-cream);
-      border: 1px solid rgba(92, 140, 141, 0.3);
+      border: 1px solid rgba(43, 76, 111, 0.2);
       padding: 10px 18px;
       border-radius: 30px;
       cursor: pointer;
@@ -70,47 +67,109 @@
       transform: scale(0.96);
     }
 
-    /* 1. ВЕРХНЯЯ ЧАСТЬ С ФОТО */
+    /* 1. ВЕРХНЯЯ ЧАСТЬ С ФОТО И БЕЛЫМ ФОНОМ */
     .hero-section {
-      padding: 40px 20px 60px 20px;
-      max-width: 600px;
-      margin: 0 auto;
-      text-align: center;
       position: relative;
+      background-color: var(--hero-bg); /* БЕЛЫЙ ФОН */
+      padding: 40px 0 60px 0;
+      width: 100%;
+      overflow: hidden;
       z-index: 1;
     }
 
-    .slider-container {
+    .hero-container {
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slider-wrapper {
       position: relative;
       width: 100%;
+      max-width: 320px; /* Узкий портретный формат */
       height: 480px;
-      border-radius: 20px;
+      margin: 0 auto;
+      border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 15px 35px rgba(92, 140, 141, 0.15);
-      border: 6px solid #FAF8F3;
-      background: #000;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+      background: #FFFFFF;
     }
 
     .slide {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      background-size: cover;
-      background-position: center;
-      transform: translateX(100%);
-      transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
       z-index: 1;
     }
 
     .slide.active {
-      transform: translateX(0);
+      opacity: 1;
       z-index: 2;
     }
 
-    .slide.incoming {
-      z-index: 3;
-      transform: translateX(0);
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
+    /* ДИНАМИЧЕСКИЕ ГРАДИЕНТНЫЕ ШЛЕЙФЫ (плавно переходят в белый фон #FFFFFF) */
+    .gradient-trail-left,
+    .gradient-trail-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: calc((100% - 320px) / 2 + 2px);
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+
+    .gradient-trail-left {
+      left: 0;
+    }
+
+    .gradient-trail-right {
+      right: 0;
+    }
+
+    .slide.active .gradient-trail-left,
+    .slide.active .gradient-trail-right {
+      opacity: 1;
+    }
+
+    /* Индивидуальные градиентные шлейфы для каждого фото (переход от цвета края в белый #FFFFFF) */
+    /* Фото 1: Sergey-A */
+    .trail-1-left {
+      background: linear-gradient(to left, rgba(35, 42, 36, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+    .trail-1-right {
+      background: linear-gradient(to right, rgba(210, 195, 170, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+
+    /* Фото 2: Sergey-B */
+    .trail-2-left {
+      background: linear-gradient(to left, rgba(45, 58, 44, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+    .trail-2-right {
+      background: linear-gradient(to right, rgba(143, 168, 200, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+
+    /* Фото 3: Sergey-C */
+    .trail-3-left {
+      background: linear-gradient(to left, rgba(49, 64, 48, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+    .trail-3-right {
+      background: linear-gradient(to right, rgba(234, 223, 207, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+    }
+
+    /* Пагинация */
     .timer-pagination {
       position: absolute;
       bottom: 20px;
@@ -120,11 +179,11 @@
       align-items: center;
       gap: 10px;
       z-index: 10;
-      background: rgba(247, 244, 238, 0.35);
-      backdrop-filter: blur(6px);
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(8px);
       padding: 6px 12px;
       border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .dot-indicator {
@@ -132,21 +191,21 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background: rgba(44, 44, 44, 0.3);
+      background: rgba(44, 44, 44, 0.2);
       overflow: hidden;
       transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.5s;
       cursor: pointer;
     }
 
     .dot-indicator.active {
-      width: 60px;
+      width: 50px;
       border-radius: 10px;
     }
 
     .dot-indicator .fill {
       position: absolute;
       top: 0; left: 0; height: 100%; width: 0%;
-      background: var(--sage-teal);
+      background: var(--section-bg-dark);
       border-radius: 10px;
     }
 
@@ -159,37 +218,34 @@
       to { width: 100%; }
     }
 
-    /* 2. ТЕГ DIV ДЛЯ ЭФФЕКТА РВАННОГО КРАЯ МАСТИХИНА НА СТЫКЕ */
+    /* СТЫК БЛОКОВ: МАСТИХИН (#5C8C8D) И ПЛАВНЫЙ АЭРОГРАФ */
     .palette-knife-stroke {
       position: relative;
       width: 100%;
-      height: 60px;
-      margin-top: -50px; /* Поднимаем поверх предыдущей секции согласно ТЗ */
+      height: 50px;
+      margin-top: -50px;
       z-index: 6;
       pointer-events: none;
-      /* Текстурированный мазок в формате WebP/PNG с альфа-прозрачностью в цвете #5C8C8D */
-      background-image: url("data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADwAQCdASoAAAAYAPxWJ3IqJSQiISF3S2AwiWkA238Acf1b4v4B//3b6N94H/55/R/3T94H9I/eP/0/sA/7P2e+uH7c/v/2A/6p/b/8v/s/4T9e/+//e/3b/kf3L/Uf232Af2b/af2f/S/th7yv/I7f369fsX2AP1P/X/+P2vP//7gH8E/sn/W/3vtd/uL/2f3v2Xv4x/e/++/v/4//sC+j/2j/q/2v3Uf9L40fbf+D/i/3p+Q/s2f/32I/oB/Yf634xf+p4A/2z14P2A/0X3a/4j49/sX7M/5v5s/In+k/4j53f+78g37J8w/s4/zP4/f433s/7D90ff9/q/iR++P+h/wftM+wD/JfrL6qH03+j/2HzE/kX8z/0/65fE99V/+P9/v2L9gX+X/0f2v+IH7c///46/3P/p91D9o/9/84PsJ/yX/x7Wj/1f///vf7r///3L+A39799x69o2y4lA3508WpXgIhh9I9xXQ6LpL0C5hLq0m93+61O6H3zX3aN8790oG2X2A332308/8A");
-      background-repeat: repeat-x;
-      background-size: contain;
-      background-position: bottom center;
-      filter: drop-shadow(0px -4px 6px rgba(0, 0, 0, 0.12));
+      /* Векторный мазочный край под цвет #5C8C8D */
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,120 L0,50 C150,90 350,10 500,65 C650,110 800,20 1000,70 C1100,95 1150,40 1200,60 L1200,120 Z' fill='%235C8C8D'/%3E%3C/svg%3E");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
     }
 
-    /* 3. СРЕДНЯЯ ЧАСТЬ С ФОНОМ #5C8C8D И МЯГКИМ ПЕРЕХОДОМ БЛЮРА */
+    /* 2. СРЕДНЯЯ ЧАСТЬ С СИНЕ-ЗЕЛЕНЫМ ФОНОМ (#5C8C8D) И ТЕКСТОМ */
     .approach-section {
       position: relative;
       z-index: 5;
-      padding: 80px 20px 90px 20px;
-      margin-top: -10px; 
-      background-color: var(--section-bg);
+      padding: 60px 20px 90px 20px;
+      background-color: var(--section-bg-dark); /* #5C8C8D */
       color: var(--text-light);
 
-      /* Сохранен плавный переход аэрографа с узким градиентом (~50px) */
+      /* Переход "Мягкий аэрограф": узкая зона маски (~50px) */
       -webkit-mask-image: linear-gradient(to bottom, transparent 0px, black 50px);
       mask-image: linear-gradient(to bottom, transparent 0px, black 50px);
     }
 
-    /* Эффект концентрированного фокуса blur(10px) - сохранен без изменений */
+    /* Эффект концентрированного фокуса c blur(10px) */
     .brush-blur-overlay {
       position: absolute;
       top: 0;
@@ -209,12 +265,12 @@
       top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none;
       z-index: 1;
-      background-color: var(--section-bg);
+      background-color: var(--section-bg-dark);
       filter: url(#microBrush);
-      opacity: 0.3;
+      opacity: 0.35;
     }
 
-    /* Штриховка поверх фона */
+    /* Линии штриховки */
     .approach-section::after {
       content: "";
       position: absolute;
@@ -243,25 +299,28 @@
 
     .main-title {
       font-family: serif;
-      font-size: 2rem;
+      font-size: 1.8rem;
       line-height: 1.3;
       margin-bottom: 20px;
       color: #FFFFFF;
       font-weight: 400;
+      white-space: pre-line;
     }
 
     .description-text {
       font-size: 1.05rem;
       line-height: 1.6;
-      color: #F0F7F7;
+      color: #F0F4F4;
       margin-bottom: 16px;
+      white-space: pre-line;
     }
 
     .sub-description-text {
       font-size: 0.98rem;
       line-height: 1.6;
-      color: #E2ECEC;
+      color: #E0EBEB;
       font-style: italic;
+      white-space: pre-line;
     }
 
     .ink-tree {
@@ -273,7 +332,7 @@
 </head>
 <body>
 
-  <!-- SVG-фильтр для эффекта текстуры Organic Brush -->
+  <!-- SVG-фильтр микро-разводов кисти -->
   <svg class="svg-filter-hidden">
     <filter id="microBrush">
       <feTurbulence type="fractalNoise" baseFrequency="0.8 0.1" numOctaves="3" stitchTiles="stitch" result="noise" />
@@ -286,37 +345,58 @@
     <button class="header-btn">Записаться</button>
   </header>
 
-  <!-- 1. ВЕРХНЯЯ ЧАСТЬ С ФОТО -->
+  <!-- 1. ВЕРХНЯЯ ЧАСТЬ С ФОТОГРАФИЯМИ И БЕЛЫМ ФОНОМ -->
   <section class="hero-section">
-    <div class="slider-container">
-      <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80');"></div>
-      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80');"></div>
-      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=80');"></div>
+    <div class="hero-container">
+      <div class="slider-wrapper">
+        
+        <!-- Слайд 1 (Sergey-A) -->
+        <div class="slide active">
+          <div class="gradient-trail-left trail-1-left"></div>
+          <div class="gradient-trail-right trail-1-right"></div>
+          <img src="Sergey-A 0.jpg" alt="Фото психолога 1">
+        </div>
 
-      <div class="timer-pagination">
-        <div class="dot-indicator active"><div class="fill"></div></div>
-        <div class="dot-indicator"><div class="fill"></div></div>
-        <div class="dot-indicator"><div class="fill"></div></div>
+        <!-- Слайд 2 (Sergey-B) -->
+        <div class="slide">
+          <div class="gradient-trail-left trail-2-left"></div>
+          <div class="gradient-trail-right trail-2-right"></div>
+          <img src="Sergey-В 0.jpg" alt="Фото психолога 2">
+        </div>
+
+        <!-- Слайд 3 (Sergey-C) -->
+        <div class="slide">
+          <div class="gradient-trail-left trail-3-left"></div>
+          <div class="gradient-trail-right trail-3-right"></div>
+          <img src="Sergey-C 0.jpg" alt="Фото психолога 3">
+        </div>
+
+        <!-- Точки-индикаторы -->
+        <div class="timer-pagination">
+          <div class="dot-indicator active"><div class="fill"></div></div>
+          <div class="dot-indicator"><div class="fill"></div></div>
+          <div class="dot-indicator"><div class="fill"></div></div>
+        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- 2. ЭФФЕКТ "РВАНЫЙ КРАЙ МАСТИХИНА" НА СТЫКЕ (margin-top: -50px) -->
+  <!-- Накладной мазок мастихина цвета #5C8C8D -->
   <div class="palette-knife-stroke"></div>
 
-  <!-- 3. СРЕДНЯЯ ЧАСТЬ: ЦВЕТ #5C8C8D, ТЕКСТ И СОХРАНЕННЫЙ ПЛАВНЫЙ ПЕРЕХОД БЛЮРА -->
+  <!-- 2. СРЕДНЯЯ ЧАСТЬ С СИНЕМ/БИРЮЗОВЫМ ФОНОМ #5C8C8D И ТЕКСТОМ -->
   <section class="approach-section">
-    <!-- Слой размытия 10px в узкой полосе (50px) -->
     <div class="brush-blur-overlay"></div>
 
     <div class="approach-content">
       <div class="approach-text-wrapper">
         <h2 class="main-title">Смотреть на человека целостно.</h2>
         <p class="description-text">
-          Психодинамический подход в сочетании с биопсихосоциальной моделью позволяет рассматривать внутренний мир человека вместе с его жизненным контекстом и состоянием организма.
+Психодинамический подход в сочетании с биопсихосоциальной моделью позволяет рассматривать внутренний мир человека вместе с его жизненным контекстом и состоянием организма.
         </p>
         <p class="sub-description-text">
-          Как русскоязычный психодинамический консультант, я предлагаю индивидуальные и парные онлайн-сессии для взрослых и подростков по всему миру.
+Как русскоязычный психодинамический консультант, я предлагаю индивидуальные и парные онлайн-сессии для взрослых и подростков по всему миру.
         </p>
       </div>
 
@@ -324,9 +404,9 @@
         <path d="M40 260 Q60 180 80 120 T110 40" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
         <path d="M75 140 Q110 110 140 90" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
         <path d="M65 170 Q30 140 20 110" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
-        <ellipse cx="145" cy="85" rx="10" ry="5" fill="#E2ECEC" transform="rotate(-25 145 85)" opacity="0.9"/>
-        <ellipse cx="15" cy="105" rx="9" ry="4" fill="#E2ECEC" transform="rotate(35 15 105)" opacity="0.85"/>
-        <ellipse cx="115" cy="35" rx="8" ry="4" fill="#E2ECEC" transform="rotate(-10 115 35)" opacity="0.9"/>
+        <ellipse cx="145" cy="85" rx="10" ry="5" fill="#E0EBEB" transform="rotate(-25 145 85)" opacity="0.9"/>
+        <ellipse cx="15" cy="105" rx="9" ry="4" fill="#E0EBEB" transform="rotate(35 15 105)" opacity="0.85"/>
+        <ellipse cx="115" cy="35" rx="8" ry="4" fill="#E0EBEB" transform="rotate(-10 115 35)" opacity="0.9"/>
       </svg>
     </div>
   </section>
@@ -336,39 +416,36 @@
       const slides = document.querySelectorAll(".slide");
       const dots = document.querySelectorAll(".dot-indicator");
       let currentIndex = 0;
+      let intervalId;
 
       function goToSlide(nextIndex) {
         if (nextIndex === currentIndex) return;
-        const currentSlide = slides[currentIndex];
-        const nextSlide = slides[nextIndex];
 
-        nextSlide.style.transition = "none";
-        nextSlide.style.transform = "translateX(100%)";
-        nextSlide.classList.remove("active");
-        void nextSlide.offsetWidth;
-
-        nextSlide.style.transition = "transform 1.2s cubic-bezier(0.4, 0, 0.2, 1)";
-        nextSlide.classList.add("incoming");
-
+        slides[currentIndex].classList.remove("active");
         dots[currentIndex].classList.remove("active");
+
+        slides[nextIndex].classList.add("active");
         dots[nextIndex].classList.add("active");
 
-        setTimeout(() => {
-          currentSlide.classList.remove("active");
-          nextSlide.classList.remove("incoming");
-          nextSlide.classList.add("active");
-          currentIndex = nextIndex;
-        }, 1200);
+        currentIndex = nextIndex;
       }
 
-      setInterval(() => {
-        const nextIndex = (currentIndex + 1) % slides.length;
-        goToSlide(nextIndex);
-      }, 10000);
+      function startAutoplay() {
+        intervalId = setInterval(() => {
+          const nextIndex = (currentIndex + 1) % slides.length;
+          goToSlide(nextIndex);
+        }, 10000);
+      }
 
       dots.forEach((dot, index) => {
-        dot.addEventListener("click", () => goToSlide(index));
+        dot.addEventListener("click", () => {
+          clearInterval(intervalId);
+          goToSlide(index);
+          startAutoplay();
+        });
       });
+
+      startAutoplay();
     });
   </script>
 </body>
