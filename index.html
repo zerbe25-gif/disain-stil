@@ -166,16 +166,17 @@
        СЕКЦИЯ «МОЙ ПОДХОД» С ПЛАВНЫМ РАЗМЫТЫМ ПЕРЕХОДОМ
        ========================================================== */
     .approach-section {
-      position: relative;
-      z-index: 5;
-      padding: 90px 20px 60px 20px; /* Верхний отступ увеличен для градиентной дымки */
-      margin-top: -40px; /* Мягкое перекрытие предыдущего блока */
-      background-color: var(--section-bg);
-      
-      /* Маска градиентной прозрачности для размытия верхней границы */
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
-      mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
-    }
+  position: relative;
+  z-index: 5;
+  padding: 60px 20px;
+  margin-top: 40px;
+  border-radius: 40px 40px 0 0; /* Более мягкие, глубокие закругления */
+}
+
+/* Мягкая светотень-растушевка на границе стыка */
+.approach-section::before {
+  box-shadow: 0 -25px 35px -5px rgba(216, 227, 233, 0.9); /* Голубая дымка вверх */
+}
 
     /* Текстурный слой с фильтром кисти */
     .approach-section::before {
