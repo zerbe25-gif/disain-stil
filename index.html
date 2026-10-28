@@ -26,7 +26,7 @@
       overflow-x: hidden;
     }
 
-    /* Технический скрытый контейнер для SVG-фильтра */
+    /* Скрытый вспомогательный SVG */
     .svg-filter-hidden {
       position: absolute;
       width: 0;
@@ -67,10 +67,10 @@
       transform: scale(0.96);
     }
 
-    /* 1. ВЕРХНЯЯ ЧАСТЬ С ФОТО И БЕЛЫМ ФОНОМ */
+    /* 1. ВЕРХНЯЯ ЧАСТЬ С ДИНАМИЧЕСКИМИ ГРАДИЕНТНЫМИ ШЛЕЙФАМИ */
     .hero-section {
       position: relative;
-      background-color: var(--hero-bg); /* БЕЛЫЙ ФОН */
+      background-color: var(--hero-bg);
       padding: 40px 0 60px 0;
       width: 100%;
       overflow: hidden;
@@ -79,7 +79,7 @@
 
     .hero-container {
       position: relative;
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       justify-content: center;
@@ -89,11 +89,10 @@
     .slider-wrapper {
       position: relative;
       width: 100%;
-      max-width: 320px; /* Узкий портретный формат */
+      max-width: 320px; /* Центральное портретное ядро */
       height: 480px;
       margin: 0 auto;
       border-radius: 16px;
-      overflow: hidden;
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
       background: #FFFFFF;
     }
@@ -104,6 +103,7 @@
       opacity: 0;
       transition: opacity 1.2s ease-in-out;
       z-index: 1;
+      border-radius: 16px;
     }
 
     .slide.active {
@@ -116,57 +116,46 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      border-radius: 16px;
+      position: relative;
+      z-index: 3;
     }
 
-    /* ДИНАМИЧЕСКИЕ ГРАДИЕНТНЫЕ ШЛЕЙФЫ (плавно переходят в белый фон #FFFFFF) */
-    .gradient-trail-left,
-    .gradient-trail-right {
+    /* ЭФФЕКТ «ДИНАМИЧЕСКИЕ ГРАДИЕНТНЫЕ ШЛЕЙФЫ» */
+    .slide::before,
+    .slide::after {
+      content: "";
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: calc((100% - 320px) / 2 + 2px);
+      top: -10px;
+      bottom: -10px;
+      width: 100vw; /* Растяжение шлейфа на всю ширину экрана */
       pointer-events: none;
       z-index: 1;
-      opacity: 0;
-      transition: opacity 1.2s ease-in-out;
+      opacity: 0.9;
+      filter: blur(14px); /* Мягкое растушевывание границ */
+      transition: all 1.2s ease-in-out;
     }
 
-    .gradient-trail-left {
-      left: 0;
+    /* Левый шлейф: вытягивается из левого края фотографии и сливается с белым фоном сайта (#FFFFFF) */
+    .slide::before {
+      right: 98%;
+      background: linear-gradient(
+        to left,
+        var(--left-color, rgba(42, 47, 43, 0.8)) 0%,
+        var(--left-accent, rgba(42, 47, 43, 0.4)) 35%,
+        rgba(255, 255, 255, 0) 100%
+      );
     }
 
-    .gradient-trail-right {
-      right: 0;
-    }
-
-    .slide.active .gradient-trail-left,
-    .slide.active .gradient-trail-right {
-      opacity: 1;
-    }
-
-    /* Индивидуальные градиентные шлейфы для каждого фото (переход от цвета края в белый #FFFFFF) */
-    /* Фото 1: Sergey-A */
-    .trail-1-left {
-      background: linear-gradient(to left, rgba(35, 42, 36, 0.15) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-    .trail-1-right {
-      background: linear-gradient(to right, rgba(210, 195, 170, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-
-    /* Фото 2: Sergey-B */
-    .trail-2-left {
-      background: linear-gradient(to left, rgba(45, 58, 44, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-    .trail-2-right {
-      background: linear-gradient(to right, rgba(143, 168, 200, 0.25) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-
-    /* Фото 3: Sergey-C */
-    .trail-3-left {
-      background: linear-gradient(to left, rgba(49, 64, 48, 0.2) 0%, rgba(255, 255, 255, 0) 100%);
-    }
-    .trail-3-right {
-      background: linear-gradient(to right, rgba(234, 223, 207, 0.3) 0%, rgba(255, 255, 255, 0) 100%);
+    /* Правый шлейф: вытягивается из правого края фотографии и сливается с белым фоном сайта (#FFFFFF) */
+    .slide::after {
+      left: 98%;
+      background: linear-gradient(
+        to right,
+        var(--right-color, rgba(234, 230, 220, 0.9)) 0%,
+        var(--right-accent, rgba(200, 180, 147, 0.5)) 35%,
+        rgba(255, 255, 255, 0) 100%
+      );
     }
 
     /* Пагинация */
@@ -179,7 +168,7 @@
       align-items: center;
       gap: 10px;
       z-index: 10;
-      background: rgba(255, 255, 255, 0.6);
+      background: rgba(255, 255, 255, 0.65);
       backdrop-filter: blur(8px);
       padding: 6px 12px;
       border-radius: 20px;
@@ -226,7 +215,6 @@
       margin-top: -50px;
       z-index: 6;
       pointer-events: none;
-      /* Векторный мазочный край под цвет #5C8C8D */
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,120 L0,50 C150,90 350,10 500,65 C650,110 800,20 1000,70 C1100,95 1150,40 1200,60 L1200,120 Z' fill='%235C8C8D'/%3E%3C/svg%3E");
       background-size: 100% 100%;
       background-repeat: no-repeat;
@@ -237,7 +225,7 @@
       position: relative;
       z-index: 5;
       padding: 60px 20px 90px 20px;
-      background-color: var(--section-bg-dark); /* #5C8C8D */
+      background-color: var(--section-bg-dark);
       color: var(--text-light);
 
       /* Переход "Мягкий аэрограф": узкая зона маски (~50px) */
@@ -304,7 +292,6 @@
       margin-bottom: 20px;
       color: #FFFFFF;
       font-weight: 400;
-      white-space: pre-line;
     }
 
     .description-text {
@@ -312,7 +299,6 @@
       line-height: 1.6;
       color: #F0F4F4;
       margin-bottom: 16px;
-      white-space: pre-line;
     }
 
     .sub-description-text {
@@ -320,7 +306,6 @@
       line-height: 1.6;
       color: #E0EBEB;
       font-style: italic;
-      white-space: pre-line;
     }
 
     .ink-tree {
@@ -345,30 +330,36 @@
     <button class="header-btn">Записаться</button>
   </header>
 
- <!-- 1. ВЕРХНЯЯ ЧАСТЬ С ФОТОГРАФИЯМИ И БЕЛЫМ ФОНОМ -->
+  <!-- 1. ВЕРХНЯЯ ЧАСТЬ С ДИНАМИЧЕСКИМИ ГРАДИЕНТНЫМИ ШЛЕЙФАМИ -->
   <section class="hero-section">
     <div class="hero-container">
       <div class="slider-wrapper">
         
         <!-- Слайд 1 (Sergey-A) -->
-        <div class="slide active">
-          <div class="gradient-trail-left trail-1-left"></div>
-          <div class="gradient-trail-right trail-1-right"></div>
-          <img src="images/Sergey-A 0.jpg" alt="Фото психолога 1">
+        <div class="slide active" 
+             data-left-fallback="#2A2F2B" 
+             data-left-accent="#8BB93E" 
+             data-right-fallback="#EAE6DC" 
+             data-right-accent="#C8B493">
+          <img src="images/Sergey-A 0.jpg" alt="Фото психолога 1" crossorigin="anonymous">
         </div>
 
         <!-- Слайд 2 (Sergey-B) -->
-        <div class="slide">
-          <div class="gradient-trail-left trail-2-left"></div>
-          <div class="gradient-trail-right trail-2-right"></div>
-          <img src="images/Sergey-B 0.jpg" alt="Фото психолога 2">
+        <div class="slide" 
+             data-left-fallback="#2D3A2C" 
+             data-left-accent="#ECE6DB" 
+             data-right-fallback="#8FA8C8" 
+             data-right-accent="#B2C6DE">
+          <img src="images/Sergey-B 0.jpg" alt="Фото психолога 2" crossorigin="anonymous">
         </div>
 
         <!-- Слайд 3 (Sergey-C) -->
-        <div class="slide">
-          <div class="gradient-trail-left trail-3-left"></div>
-          <div class="gradient-trail-right trail-3-right"></div>
-          <img src="images/Sergey-C 0.jpg" alt="Фото психолога 3">
+        <div class="slide" 
+             data-left-fallback="#314030" 
+             data-left-accent="#E8E3DA" 
+             data-right-fallback="#FAF5EA" 
+             data-right-accent="#EADFCF">
+          <img src="images/Sergey-C 0.jpg" alt="Фото психолога 3" crossorigin="anonymous">
         </div>
 
         <!-- Точки-индикаторы -->
@@ -385,7 +376,7 @@
   <!-- Накладной мазок мастихина цвета #5C8C8D -->
   <div class="palette-knife-stroke"></div>
 
-  <!-- 2. СРЕДНЯЯ ЧАСТЬ С СИНЕМ/БИРЮЗОВЫМ ФОНОМ #5C8C8D И ТЕКСТОМ -->
+  <!-- 2. СРЕДНЯЯ ЧАСТЬ С ФОНОМ #5C8C8D И ТЕКСТОМ -->
   <section class="approach-section">
     <div class="brush-blur-overlay"></div>
 
@@ -393,10 +384,10 @@
       <div class="approach-text-wrapper">
         <h2 class="main-title">Смотреть на человека целостно.</h2>
         <p class="description-text">
-Психодинамический подход в сочетании с биопсихосоциальной моделью позволяет рассматривать внутренний мир человека вместе с его жизненным контекстом и состоянием организма.
+          Психодинамический подход в сочетании с биопсихосоциальной моделью позволяет рассматривать внутренний мир человека вместе с его жизненным контекстом и состоянием организма.
         </p>
         <p class="sub-description-text">
-Как русскоязычный психодинамический консультант, я предлагаю индивидуальные и парные онлайн-сессии для взрослых и подростков по всему миру.
+          Как русскоязычный психодинамический консультант, я предлагаю индивидуальные и парные онлайн-сессии для взрослых и подростков по всему миру.
         </p>
       </div>
 
@@ -411,12 +402,74 @@
     </div>
   </section>
 
+  <!-- Скрипт: Детекция цвета Canvas (0% CPU) + Автоматическое переключение -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const slides = document.querySelectorAll(".slide");
       const dots = document.querySelectorAll(".dot-indicator");
       let currentIndex = 0;
       let intervalId;
+
+      // Функция сэмплирования цвета кромок фотографии через Canvas
+      function extractEdgeColors(slide) {
+        const img = slide.querySelector("img");
+        if (!img) return;
+
+        const setColors = (left, leftAcc, right, rightAcc) => {
+          slide.style.setProperty("--left-color", left);
+          slide.style.setProperty("--left-accent", leftAcc);
+          slide.style.setProperty("--right-color", right);
+          slide.style.setProperty("--right-accent", rightAcc);
+        };
+
+        const processImage = () => {
+          try {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            canvas.width = img.naturalWidth || 300;
+            canvas.height = img.naturalHeight || 450;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Сэмплирование левого и правого краев
+            const leftData = ctx.getImageData(5, Math.floor(canvas.height / 2), 1, 1).data;
+            const rightData = ctx.getImageData(canvas.width - 5, Math.floor(canvas.height / 2), 1, 1).data;
+
+            const leftColor = `rgba(${leftData[0]}, ${leftData[1]}, ${leftData[2]}, 0.85)`;
+            const rightColor = `rgba(${rightData[0]}, ${rightData[1]}, ${rightData[2]}, 0.85)`;
+
+            setColors(
+              leftColor,
+              slide.dataset.leftAccent || leftColor,
+              rightColor,
+              slide.dataset.rightAccent || rightColor
+            );
+          } catch (e) {
+            // Резервный переход на предварительный цветовой анализ при ограничении CORS
+            setColors(
+              slide.dataset.leftFallback,
+              slide.dataset.leftAccent,
+              slide.dataset.rightFallback,
+              slide.dataset.rightAccent
+            );
+          }
+        };
+
+        if (img.complete && img.naturalWidth !== 0) {
+          processImage();
+        } else {
+          img.addEventListener("load", processImage);
+          // В случае задержки загрузки сразу ставим цвета аналитики
+          setColors(
+            slide.dataset.leftFallback,
+            slide.dataset.leftAccent,
+            slide.dataset.rightFallback,
+            slide.dataset.rightAccent
+          );
+        }
+      }
+
+      // Инициализация шлейфов для всех фотографий
+      slides.forEach(slide => extractEdgeColors(slide));
 
       function goToSlide(nextIndex) {
         if (nextIndex === currentIndex) return;
