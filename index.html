@@ -165,34 +165,32 @@
     /* ==========================================================
        СЕКЦИЯ «МОЙ ПОДХОД» С ПЛАВНЫМ РАЗМЫТЫМ ПЕРЕХОДОМ
        ========================================================== */
- 
-.approach-section {
+ .approach-section {
       position: relative;
       z-index: 5;
-      padding: 80px 20px 60px 20px;
-      margin-top: -35px; /* Сдвигаем блок вверх, чтобы он заходил на предыдущую секцию */
-      
-      /* Базовый цвет голубой секции */
+      padding: 90px 20px 60px 20px;
+      margin-top: -40px; /* Заходим на предыдущую секцию */
       background-color: var(--section-bg);
-      
-      /* Магия «рваного»/органического края с помощью CSS-маски */
-      -webkit-mask-image: radial-gradient(ellipse 135% 45px at 50% 0px, transparent 48%, black 52%);
-      mask-image: radial-gradient(ellipse 135% 45px at 50% 0px, transparent 48%, black 52%);
     }
 
-    /* Текстура микро-разводов кисти (ваш фильтр) */
+    /* 1. Текстура кисти с ПЛАВНЫМ размытым верхним краем (маска-туман) */
     .approach-section::before {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none;
       z-index: 1;
+      
       background-color: var(--section-bg);
       filter: url(#microBrush);
       opacity: 0.65;
+      
+      /* Плавный переход: сверху полная прозрачность, к 70px блок полностью проявляется */
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
     }
 
-    /* Тонкие штрихи поверх текстуры */
+    /* 2. Тонкие штрихи поверх текстуры */
     .approach-section::after {
       content: "";
       position: absolute;
@@ -202,6 +200,10 @@
       background-repeat: repeat;
       pointer-events: none;
       z-index: 2;
+      
+      /* Дублируем маску на штрихи, чтобы они тоже плавно появлялись сверху */
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
     }
 
     .approach-content {
@@ -212,12 +214,14 @@
       margin: 0 auto;
       gap: 20px;
       position: relative;
-      z-index: 3; /* Контент строго поверх масок и текстур */
+      z-index: 3; /* Контент поверх всех эффектов */
     }
     
 </style>
 </head>
 <body>
+
+  
   <!-- SVG-фильтр -->
   <svg class="svg-filter-hidden">
     <filter id="microBrush">
