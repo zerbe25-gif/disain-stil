@@ -68,7 +68,7 @@
 
     /* Главный блок / Слайдер */
     .hero-section {
-      padding: 40px 20px;
+      padding: 40px 20px 60px 20px;
       max-width: 600px;
       margin: 0 auto;
       text-align: center;
@@ -163,42 +163,37 @@
     }
 
     /* ==========================================================
-       ВАШ КОД ТЕКСТУРЫ С МИКРО-РАЗВОДАМИ КИСТИ
-       Применен к блоку «Мой подход»
+       СЕКЦИЯ «МОЙ ПОДХОД» С ПЛАВНЫМ РАЗМЫТЫМ ПЕРЕХОДОМ
        ========================================================== */
     .approach-section {
       position: relative;
       z-index: 5;
-      padding: 60px 20px;
-      margin-top: 40px;
-      border-radius: 24px 24px 0 0;
-      
-      /* Базовый цвет */
+      padding: 90px 20px 60px 20px; /* Верхний отступ увеличен для градиентной дымки */
+      margin-top: -40px; /* Мягкое перекрытие предыдущего блока */
       background-color: var(--section-bg);
       
-      /* Используем псевдоэлемент с фильтром из HTML для надежного отображения текстуры кисти */
+      /* Маска градиентной прозрачности для размытия верхней границы */
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
     }
 
+    /* Текстурный слой с фильтром кисти */
     .approach-section::before {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: 24px 24px 0 0;
       pointer-events: none;
       z-index: 1;
-      
-      /* Применяем фильтр микро-разводов из HTML */
       background-color: var(--section-bg);
       filter: url(#microBrush);
-      opacity: 0.65; /* Регулирует общую выраженность текстуры кисти */
+      opacity: 0.65;
     }
 
-    /* Дополнительный слой с тонкими линиями штриховки поверх текстуры */
+    /* Тонкие штрихи */
     .approach-section::after {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: 24px 24px 0 0;
       background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
       background-size: 6px 100%;
       background-repeat: repeat;
@@ -214,7 +209,7 @@
       margin: 0 auto;
       gap: 20px;
       position: relative;
-      z-index: 3; /* Текст и графика выше текстурных слоев */
+      z-index: 3;
     }
 
     .ink-tree {
@@ -226,7 +221,7 @@
 </head>
 <body>
 
-  <!-- Встроенный SVG-фильтр (гарантирует отсутствие блокировок в браузерах) -->
+  <!-- SVG-фильтр -->
   <svg class="svg-filter-hidden">
     <filter id="microBrush">
       <feTurbulence type="fractalNoise" baseFrequency="0.9 0.12" numOctaves="3" stitchTiles="stitch" result="noise" />
@@ -255,7 +250,7 @@
     </div>
   </section>
 
-  <!-- Секция "Мой подход" с вашей текстурой микро-разводов кисти -->
+  <!-- Секция с градиентным размытым верхним краем -->
   <section class="approach-section">
     <div class="approach-content">
       <div>
