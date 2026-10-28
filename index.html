@@ -67,7 +67,7 @@
       transform: scale(0.96);
     }
 
-    /* 1. ВЕРХНЯЯ ЧАСТЬ С ДИНАМИЧЕСКИМИ ГРАДИЕНТНЫМИ ШЛЕЙФАМИ */
+    /* 1. ВЕРХНЯЯ ЧАСТЬ С МНОГОУРОВНЕВЫМИ ГРАДИЕНТНЫМИ ШЛЕЙФАМИ */
     .hero-section {
       position: relative;
       background-color: var(--hero-bg);
@@ -121,31 +121,49 @@
       z-index: 3;
     }
 
-    /* ЭФФЕКТ «ДИНАМИЧЕСКИЕ ГРАДИЕНТНЫЕ ШЛЕЙФЫ» */
+    /* МНОГОУРОВНЕВЫЕ ШЛЕЙФИ (ВЕРХ, СЕРЕДИНА, НИЗ) */
     .slide::before,
     .slide::after {
       content: "";
       position: absolute;
       top: -10px;
       bottom: -10px;
-      width: 3vw; /* Растяжение шлейфа в стороны экрана */
+      width: 3vw;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.9;
-      filter: blur(14px); /* Мягкое растушевывание границ */
-      transition: all 1.2s ease-in-out;
+      opacity: 0.85;
+      filter: blur(16px);
+      transition: opacity 1.2s ease-in-out;
     }
 
-    /* Левый шлейф на основе трех точек */
-    .slide::before {
+    /* Слайд 1: Левый и правый шлейфы (Верх-Середина-Низ) */
+    .slide-1::before {
       right: 98%;
-      background: var(--left-grad, linear-gradient(to left, rgba(42, 47, 43, 0.8) 0%, rgba(255, 255, 255, 0) 100%));
+      background: linear-gradient(to left, rgba(35, 42, 36, 0.7) 0%, rgba(42, 47, 43, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+    }
+    .slide-1::after {
+      left: 98%;
+      background: linear-gradient(to right, rgba(220, 210, 190, 0.8) 0%, rgba(200, 180, 147, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
     }
 
-    /* Правый шлейф на основе трех точек */
-    .slide::after {
+    /* Слайд 2: Левый и правый шлейфы (Верх-Середина-Низ) */
+    .slide-2::before {
+      right: 98%;
+      background: linear-gradient(to left, rgba(45, 58, 44, 0.75) 0%, rgba(35, 45, 34, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+    }
+    .slide-2::after {
       left: 98%;
-      background: var(--right-grad, linear-gradient(to right, rgba(234, 230, 220, 0.9) 0%, rgba(255, 255, 255, 0) 100%));
+      background: linear-gradient(to right, rgba(143, 168, 200, 0.8) 0%, rgba(178, 198, 222, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+    }
+
+    /* Слайд 3: Левый и правый шлейфы (Верх-Середина-Низ) */
+    .slide-3::before {
+      right: 98%;
+      background: linear-gradient(to left, rgba(49, 64, 48, 0.75) 0%, rgba(40, 52, 39, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+    }
+    .slide-3::after {
+      left: 98%;
+      background: linear-gradient(to right, rgba(250, 245, 234, 0.85) 0%, rgba(234, 223, 207, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
     }
     
     /* Пагинация */
@@ -320,30 +338,24 @@
     <button class="header-btn">Записаться</button>
   </header>
 
-  <!-- 1. ВЕРХНЯЯ ЧАСТЬ С ДИНАМИЧЕСКИМИ ГРАДИЕНТНЫМИ ШЛЕЙФАМИ -->
+  <!-- 1. ВЕРХНЯЯ ЧАСТЬ С МНОГОУРОВНЕВЫМИ ШЛЕЙФАМИ -->
   <section class="hero-section">
     <div class="hero-container">
       <div class="slider-wrapper">
         
         <!-- Слайд 1 (Sergey-A) -->
-        <div class="slide active" 
-             data-left-fallback="#2A2F2B" 
-             data-right-fallback="#EAE6DC">
-          <img src="images/Sergey-A%200.jpg" alt="Фото психолога 1" crossorigin="anonymous">
+        <div class="slide slide-1 active">
+          <img src="images/Sergey-A%200.jpg" alt="Фото психолога 1">
         </div>
 
         <!-- Слайд 2 (Sergey-B) -->
-        <div class="slide" 
-             data-left-fallback="#2D3A2C" 
-             data-right-fallback="#8FA8C8">
-          <img src="images/Sergey-B%200.jpg" alt="Фото психолога 2" crossorigin="anonymous">
+        <div class="slide slide-2">
+          <img src="images/Sergey-B%200.jpg" alt="Фото психолога 2">
         </div>
 
         <!-- Слайд 3 (Sergey-C) -->
-        <div class="slide" 
-             data-left-fallback="#314030" 
-             data-right-fallback="#FAF5EA">
-          <img src="images/Sergey-C%200.jpg" alt="Фото психолога 3" crossorigin="anonymous">
+        <div class="slide slide-3">
+          <img src="images/Sergey-C%200.jpg" alt="Фото психолога 3">
         </div>
 
         <!-- Точки-индикаторы -->
@@ -386,68 +398,13 @@
     </div>
   </section>
 
-  <!-- Скрипт: Детекция цвета Canvas в трех точках + Автоматическое переключение слайдов -->
+  <!-- Скрипт: Чистое и надежное переключение слайдов (0% нагрузки, 60 FPS) -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const slides = document.querySelectorAll(".slide");
       const dots = document.querySelectorAll(".dot-indicator");
       let currentIndex = 0;
       let intervalId;
-
-      // Сэмплирование цвета кромок в трех точках (верх, середина, низ)
-      function extractEdgeColors(slide) {
-        const img = slide.querySelector("img");
-        if (!img) return;
-
-        const setColors = (colors) => {
-          slide.style.setProperty("--left-grad", `linear-gradient(to left, ${colors.leftMid} 0%, ${colors.leftTop} 50%, rgba(255,255,255,0) 100%)`);
-          slide.style.setProperty("--right-grad", `linear-gradient(to right, ${colors.rightMid} 0%, ${colors.rightBottom} 50%, rgba(255,255,255,0) 100%)`);
-        };
-
-        const processImage = () => {
-          try {
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d", { willReadFrequently: true });
-            canvas.width = img.naturalWidth || 300;
-            canvas.height = img.naturalHeight || 450;
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-            const h = canvas.height;
-            const w = canvas.width;
-
-            const getPixel = (x, y) => {
-              const d = ctx.getImageData(x, y, 1, 1).data;
-              return `rgba(${d[0]}, ${d[1]}, ${d[2]}, 0.85)`;
-            };
-
-            const colors = {
-              leftTop: getPixel(5, Math.floor(h * 0.2)),
-              leftMid: getPixel(5, Math.floor(h * 0.5)),
-              leftBottom: getPixel(5, Math.floor(h * 0.8)),
-              rightTop: getPixel(w - 5, Math.floor(h * 0.2)),
-              rightMid: getPixel(w - 5, Math.floor(h * 0.5)),
-              rightBottom: getPixel(w - 5, Math.floor(h * 0.8))
-            };
-
-            setColors(colors);
-          } catch (e) {
-            // Резервный вариант при ограничениях CORS
-            const fallbackLeft = slide.dataset.leftFallback || "#2A2F2B";
-            const fallbackRight = slide.dataset.rightFallback || "#EAE6DC";
-            slide.style.setProperty("--left-grad", `linear-gradient(to left, ${fallbackLeft} 0%, rgba(255,255,255,0) 100%)`);
-            slide.style.setProperty("--right-grad", `linear-gradient(to right, ${fallbackRight} 0%, rgba(255,255,255,0) 100%)`);
-          }
-        };
-
-        if (img.complete && img.naturalWidth !== 0) {
-          processImage();
-        } else {
-          img.addEventListener("load", processImage);
-        }
-      }
-
-      // Инициализация шлейфов для всех фотографий
-      slides.forEach(slide => extractEdgeColors(slide));
 
       function goToSlide(nextIndex) {
         if (nextIndex === currentIndex) return;
