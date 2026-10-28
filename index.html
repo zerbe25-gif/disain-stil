@@ -128,7 +128,7 @@
       position: absolute;
       top: -10px;
       bottom: -10px;
-      width: 5vw; /* Растяжение шлейфа на всю ширину экрана */
+      width: 50vw; /* Растяжение шлейфа в стороны экрана */
       pointer-events: none;
       z-index: 1;
       opacity: 0.9;
@@ -136,7 +136,7 @@
       transition: all 1.2s ease-in-out;
     }
 
-   /* Левый шлейф на основе трех точек */
+    /* Левый шлейф на основе трех точек */
     .slide::before {
       right: 98%;
       background: var(--left-grad, linear-gradient(to left, rgba(42, 47, 43, 0.8) 0%, rgba(255, 255, 255, 0) 100%));
@@ -210,7 +210,7 @@
       background-repeat: no-repeat;
     }
 
-    /* 2. СРЕДНЯЯ ЧАСТЬ С СИНЕ-ЗЕЛЕНЫМ ФОНОМ (#5C8C8D) И ТЕКСТОМ */
+    /* 2. СРЕДНЯЯ ЧАСТЬ С ФОНОМ #5C8C8D И ТЕКСТОМ */
     .approach-section {
       position: relative;
       z-index: 5;
@@ -328,28 +328,22 @@
         <!-- Слайд 1 (Sergey-A) -->
         <div class="slide active" 
              data-left-fallback="#2A2F2B" 
-             data-left-accent="#8BB93E" 
-             data-right-fallback="#EAE6DC" 
-             data-right-accent="#C8B493">
-          <img src="images/Sergey-A 0.jpg" alt="Фото психолога 1" crossorigin="anonymous">
+             data-right-fallback="#EAE6DC">
+          <img src="images/Sergey-A%200.jpg" alt="Фото психолога 1" crossorigin="anonymous">
         </div>
 
         <!-- Слайд 2 (Sergey-B) -->
         <div class="slide" 
              data-left-fallback="#2D3A2C" 
-             data-left-accent="#ECE6DB" 
-             data-right-fallback="#8FA8C8" 
-             data-right-accent="#B2C6DE">
-          <img src="images/Sergey-B 0.jpg" alt="Фото психолога 2" crossorigin="anonymous">
+             data-right-fallback="#8FA8C8">
+          <img src="images/Sergey-B%200.jpg" alt="Фото психолога 2" crossorigin="anonymous">
         </div>
 
         <!-- Слайд 3 (Sergey-C) -->
         <div class="slide" 
              data-left-fallback="#314030" 
-             data-left-accent="#E8E3DA" 
-             data-right-fallback="#FAF5EA" 
-             data-right-accent="#EADFCF">
-          <img src="images/Sergey-C 0.jpg" alt="Фото психолога 3" crossorigin="anonymous">
+             data-right-fallback="#FAF5EA">
+          <img src="images/Sergey-C%200.jpg" alt="Фото психолога 3" crossorigin="anonymous">
         </div>
 
         <!-- Точки-индикаторы -->
@@ -392,7 +386,7 @@
     </div>
   </section>
 
-  <!-- Скрипт: Детекция цвета Canvas (0% CPU) + Автоматическое переключение -->
+  <!-- Скрипт: Детекция цвета Canvas в трех точках + Автоматическое переключение слайдов -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const slides = document.querySelectorAll(".slide");
@@ -400,15 +394,7 @@
       let currentIndex = 0;
       let intervalId;
 
-    <!-- Скрипт: Детекция цвета Canvas в трех точках (0% CPU) + Автоматическое переключение -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const slides = document.querySelectorAll(".slide");
-      const dots = document.querySelectorAll(".dot-indicator");
-      let currentIndex = 0;
-      let intervalId;
-
-      // Новая функция сэмплирования цвета кромок в трех точках (верх, середина, низ)
+      // Сэмплирование цвета кромок в трех точках (верх, середина, низ)
       function extractEdgeColors(slide) {
         const img = slide.querySelector("img");
         if (!img) return;
@@ -446,8 +432,10 @@
             setColors(colors);
           } catch (e) {
             // Резервный вариант при ограничениях CORS
-            slide.style.setProperty("--left-grad", `linear-gradient(to left, ${slide.dataset.leftFallback} 0%, rgba(255,255,255,0) 100%)`);
-            slide.style.setProperty("--right-grad", `linear-gradient(to right, ${slide.dataset.rightFallback} 0%, rgba(255,255,255,0) 100%)`);
+            const fallbackLeft = slide.dataset.leftFallback || "#2A2F2B";
+            const fallbackRight = slide.dataset.rightFallback || "#EAE6DC";
+            slide.style.setProperty("--left-grad", `linear-gradient(to left, ${fallbackLeft} 0%, rgba(255,255,255,0) 100%)`);
+            slide.style.setProperty("--right-grad", `linear-gradient(to right, ${fallbackRight} 0%, rgba(255,255,255,0) 100%)`);
           }
         };
 
@@ -455,54 +443,6 @@
           processImage();
         } else {
           img.addEventListener("load", processImage);
-        }
-      }
-
-      // Инициализация шлейфов для всех фотографий
-      slides.forEach(slide => extractEdgeColors(slide));
-
-      function goToSlide(nextIndex) {
-        if (nextIndex === currentIndex) return;
-
-        slides[currentIndex].classList.remove("active");
-        dots[currentIndex].classList.remove("active");
-
-        slides[nextIndex].classList.add("active");
-        dots[nextIndex].classList.add("active");
-
-        currentIndex = nextIndex;
-      }
-
-      function startAutoplay() {
-        intervalId = setInterval(() => {
-          const nextIndex = (currentIndex + 1) % slides.length;
-          goToSlide(nextIndex);
-        }, 10000);
-      }
-
-      dots.forEach((dot, index) => {
-        dot.addEventListener("click", () => {
-          clearInterval(intervalId);
-          goToSlide(index);
-          startAutoplay();
-        });
-      });
-
-      startAutoplay();
-    });
-  </script>
-
-        if (img.complete && img.naturalWidth !== 0) {
-          processImage();
-        } else {
-          img.addEventListener("load", processImage);
-          // В случае задержки загрузки сразу ставим цвета аналитики
-          setColors(
-            slide.dataset.leftFallback,
-            slide.dataset.leftAccent,
-            slide.dataset.rightFallback,
-            slide.dataset.rightAccent
-          );
         }
       }
 
