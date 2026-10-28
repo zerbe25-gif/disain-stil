@@ -9,8 +9,9 @@
       --butter-cream: #F7F4EE;
       --denim: #2B4C6F;
       --powder-blue: #8E9CA3;
-      --section-bg: #d8e3e9;
+      --section-bg: #2B4C6F; /* Синий фон для средней части */
       --text-dark: #2C2C2C;
+      --text-light: #F7F4EE;
       --terracotta: #B87D64;
     }
 
@@ -27,7 +28,7 @@
       overflow-x: hidden;
     }
 
-    /* Технический скрытый контейнер для SVG-фильтра */
+    /* Технический скрытый контейнер для SVG-фильтров */
     .svg-filter-hidden {
       position: absolute;
       width: 0;
@@ -43,6 +44,8 @@
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid rgba(43, 76, 111, 0.1);
+      position: relative;
+      z-index: 10;
     }
 
     .logo {
@@ -66,21 +69,14 @@
       transform: scale(0.96);
     }
 
-    /* Главный блок / Слайдер */
+    /* 1. ВЕРХНЯЯ ЧАСТЬ С ФОТО */
     .hero-section {
-      padding: 40px 20px;
+      padding: 40px 20px 60px 20px;
       max-width: 600px;
       margin: 0 auto;
       text-align: center;
-    }
-
-    h1 {
-      font-family: serif;
-      font-size: 2.2rem;
-      color: var(--text-dark);
-      line-height: 1.2;
-      margin-bottom: 24px;
-      font-weight: 400;
+      position: relative;
+      z-index: 1;
     }
 
     .slider-container {
@@ -162,44 +158,51 @@
       to { width: 100%; }
     }
 
-    /* ==========================================================
-       ВАШ КОД ТЕКСТУРЫ С МИКРО-РАЗВОДАМИ КИСТИ
-       Применен к блоку «Мой подход»
-       ========================================================== */
+    /* 2 & 3. СРЕДНЯЯ ЧАСТЬ С СИНИМ ФОНОМ И ЭФФЕКТОМ «МЯГКИЙ АЭРОГРАФ» */
     .approach-section {
       position: relative;
       z-index: 5;
-      padding: 60px 20px;
-      margin-top: 40px;
-      border-radius: 24px 24px 0 0;
-      
-      /* Базовый цвет */
+      padding: 80px 20px 90px 20px;
+      margin-top: -50px; /* Перекрытие для плавного перехода */
       background-color: var(--section-bg);
-      
-      /* Используем псевдоэлемент с фильтром из HTML для надежного отображения текстуры кисти */
+      color: var(--text-light);
+
+      /* Эффект маски аэрографа с узким градиентом (~50px) в верхней части */
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0px, black 50px);
+      mask-image: linear-gradient(to bottom, transparent 0px, black 50px);
     }
 
+    /* Эффект концентрированного фокуса с размытием blur(10px) */
+    .brush-blur-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50px; /* Узкая зона размытия 50px */
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Органический текстурный слой (Organic Brush) */
     .approach-section::before {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: 24px 24px 0 0;
       pointer-events: none;
       z-index: 1;
-      
-      /* Применяем фильтр микро-разводов из HTML */
       background-color: var(--section-bg);
       filter: url(#microBrush);
-      opacity: 0.65; /* Регулирует общую выраженность текстуры кисти */
+      opacity: 0.35;
     }
 
-    /* Дополнительный слой с тонкими линиями штриховки поверх текстуры */
+    /* Штриховка поверх фона */
     .approach-section::after {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
-      border-radius: 24px 24px 0 0;
-      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
       background-size: 6px 100%;
       background-repeat: repeat;
       pointer-events: none;
@@ -210,11 +213,38 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      max-width: 500px;
+      max-width: 650px;
       margin: 0 auto;
-      gap: 20px;
+      gap: 30px;
       position: relative;
-      z-index: 3; /* Текст и графика выше текстурных слоев */
+      z-index: 3;
+    }
+
+    .approach-text-wrapper {
+      text-align: left;
+    }
+
+    .main-title {
+      font-family: serif;
+      font-size: 2rem;
+      line-height: 1.3;
+      margin-bottom: 20px;
+      color: #FFFFFF;
+      font-weight: 400;
+    }
+
+    .description-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #E2E8F0;
+      margin-bottom: 16px;
+    }
+
+    .sub-description-text {
+      font-size: 0.98rem;
+      line-height: 1.6;
+      color: #CBD5E1;
+      font-style: italic;
     }
 
     .ink-tree {
@@ -226,11 +256,11 @@
 </head>
 <body>
 
-  <!-- Встроенный SVG-фильтр (гарантирует отсутствие блокировок в браузерах) -->
+  <!-- SVG-фильтр для эффекта текстуры Organic Brush -->
   <svg class="svg-filter-hidden">
     <filter id="microBrush">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9 0.12" numOctaves="3" stitchTiles="stitch" result="noise" />
-      <feColorMatrix type="matrix" values="0 0 0 0 0.15  0 0 0 0 0.25  0 0 0 0 0.35  0 0 0 0.18 0" />
+      <feTurbulence type="fractalNoise" baseFrequency="0.8 0.1" numOctaves="3" stitchTiles="stitch" result="noise" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.9  0 0 0 0 0.95  0 0 0 0 1  0 0 0 0.15 0" />
     </filter>
   </svg>
 
@@ -239,9 +269,8 @@
     <button class="header-btn">Записаться</button>
   </header>
 
+  <!-- 1. ВЕРХНЯЯ ЧАСТЬ С ФОТО -->
   <section class="hero-section">
-    <h1>Смотреть на человека целостно</h1>
-    
     <div class="slider-container">
       <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80');"></div>
       <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80');"></div>
@@ -255,20 +284,29 @@
     </div>
   </section>
 
-  <!-- Секция "Мой подход" с вашей текстурой микро-разводов кисти -->
+  <!-- 2 & 3. СРЕДНЯЯ ЧАСТЬ: СИНИЙ ФОН, ТЕКСТ И МЯГКИЙ ПЕРЕХОД "ОБЛАЧНЫЙ/АЭРОГРАФ" -->
   <section class="approach-section">
+    <!-- Слой размытия 10px в узкой полосе (50px) -->
+    <div class="brush-blur-overlay"></div>
+
     <div class="approach-content">
-      <div>
-        <h3 style="font-family: serif; font-size: 1.4rem; margin-bottom: 10px; color: var(--denim);">Мой подход</h3>
-        <p style="font-size: 0.95rem; line-height: 1.5; color: #4A5568;">Психодинамический подход в сочетании с биопсихосоциальной моделью...</p>
+      <div class="approach-text-wrapper">
+        <h2 class="main-title">Смотреть на человека целостно.</h2>
+        <p class="description-text">
+          Психодинамический подход в сочетании с биопсихосоциальной моделью позволяет рассматривать внутренний мир человека вместе с его жизненным контекстом и состоянием организма.
+        </p>
+        <p class="sub-description-text">
+          Как русскоязычный психодинамический консультант, я предлагаю индивидуальные и парные онлайн-сессии для взрослых и подростков по всему миру.
+        </p>
       </div>
+
       <svg class="ink-tree" viewBox="0 0 200 280" xmlns="http://www.w3.org/2000/svg">
-        <path d="M40 260 Q60 180 80 120 T110 40" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round"/>
-        <path d="M75 140 Q110 110 140 90" fill="none" stroke="#1A1A1A" stroke-width="1.8" stroke-linecap="round"/>
-        <path d="M65 170 Q30 140 20 110" fill="none" stroke="#1A1A1A" stroke-width="1.5" stroke-linecap="round"/>
-        <ellipse cx="145" cy="85" rx="10" ry="5" fill="#2B4C6F" transform="rotate(-25 145 85)" opacity="0.9" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
-        <ellipse cx="15" cy="105" rx="9" ry="4" fill="#2B4C6F" transform="rotate(35 15 105)" opacity="0.85" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
-        <ellipse cx="115" cy="35" rx="8" ry="4" fill="#2B4C6F" transform="rotate(-10 115 35)" opacity="0.9" filter="drop-shadow(1px 1px 1px rgba(0,0,0,0.3))"/>
+        <path d="M40 260 Q60 180 80 120 T110 40" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+        <path d="M75 140 Q110 110 140 90" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" opacity="0.85"/>
+        <path d="M65 170 Q30 140 20 110" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+        <ellipse cx="145" cy="85" rx="10" ry="5" fill="#8E9CA3" transform="rotate(-25 145 85)" opacity="0.9"/>
+        <ellipse cx="15" cy="105" rx="9" ry="4" fill="#8E9CA3" transform="rotate(35 15 105)" opacity="0.85"/>
+        <ellipse cx="115" cy="35" rx="8" ry="4" fill="#8E9CA3" transform="rotate(-10 115 35)" opacity="0.9"/>
       </svg>
     </div>
   </section>
