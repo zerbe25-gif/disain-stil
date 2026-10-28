@@ -165,15 +165,15 @@
     /* ==========================================================
        СЕКЦИЯ «МОЙ ПОДХОД» С ПЛАВНЫМ РАЗМЫТЫМ ПЕРЕХОДОМ
        ========================================================== */
- .approach-section {
+.approach-section {
       position: relative;
       z-index: 5;
       padding: 90px 20px 60px 20px;
-      margin-top: -40px; /* Заходим на предыдущую секцию */
+      margin-top: -40px;
       background-color: var(--section-bg);
     }
 
-    /* 1. Текстура кисти с ПЛАВНЫМ размытым верхним краем (маска-туман) */
+    /* 1. Текстура кисти с РВАНЫМ краем мастихина */
     .approach-section::before {
       content: "";
       position: absolute;
@@ -185,9 +185,13 @@
       filter: url(#microBrush);
       opacity: 0.65;
       
-      /* Плавный переход: сверху полная прозрачность, к 70px блок полностью проявляется */
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
-      mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
+      /* Используем SVG-фильтр турбулентности как маску для создания рваного края */
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
+      -webkit-mask-size: 100% 70px;
+      mask-size: 100% 70px;
+      -webkit-mask-repeat: repeat-x;
+      mask-repeat: repeat-x;
     }
 
     /* 2. Тонкие штрихи поверх текстуры */
@@ -201,9 +205,13 @@
       pointer-events: none;
       z-index: 2;
       
-      /* Дублируем маску на штрихи, чтобы они тоже плавно появлялись сверху */
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
-      mask-image: linear-gradient(to bottom, transparent 0%, black 70px, black 100%);
+      /* Дублируем рваную маску на штрихи */
+      -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
+      mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
+      -webkit-mask-size: 100% 70px;
+      mask-size: 100% 70px;
+      -webkit-mask-repeat: repeat-x;
+      mask-repeat: repeat-x;
     }
 
     .approach-content {
@@ -214,7 +222,7 @@
       margin: 0 auto;
       gap: 20px;
       position: relative;
-      z-index: 3; /* Контент поверх всех эффектов */
+      z-index: 3;
     }
     
 </style>
