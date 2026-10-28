@@ -175,7 +175,7 @@
       background-color: var(--section-bg);
       
       /* Скругляем только верхние углы для плавности */
-      border-radius: 45px 45px 0 0;
+      border-radius: 20px 45px 0 0;
       
       /* Текстура микро-разводов кисти (ваш фильтр) */
     }
@@ -190,12 +190,12 @@
       z-index: 1;
       
       /* Главная магия размытия: объемная тень цвета секции, направленная вверх */
-      box-shadow: 0 -30px 40px 5px rgba(216, 227, 233, 0.85);
+      box-shadow: 0 -10px 40px 5px rgba(216, 227, 233, 0.85);
       
       /* Накладываем ваш фильтр микро-кисти поверх */
       background-color: var(--section-bg);
       filter: url(#microBrush);
-      opacity: 0.6;
+      opacity: 0.5;
     }
 
     /* 2. Тонкие вертикальные штрихи */
