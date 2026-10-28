@@ -165,11 +165,11 @@
     /* ==========================================================
        СЕКЦИЯ «МОЙ ПОДХОД» С ПЛАВНЫМ РАЗМЫТЫМ ПЕРЕХОДОМ
        ========================================================== */
-.approach-section {
+    .approach-section {
       position: relative;
       z-index: 5;
       padding: 90px 20px 60px 20px;
-      margin-top: -40px;
+      margin-top: -40px; /* Заходим на предыдущую секцию */
       background-color: var(--section-bg);
     }
 
@@ -185,7 +185,7 @@
       filter: url(#microBrush);
       opacity: 0.65;
       
-      /* Используем SVG-фильтр турбулентности как маску для создания рваного края */
+      /* SVG-маска с турбулентностью создает рваный, неровный край сверху */
       -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
       mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
       -webkit-mask-size: 100% 70px;
@@ -205,7 +205,7 @@
       pointer-events: none;
       z-index: 2;
       
-      /* Дублируем рваную маску на штрихи */
+      /* Дублируем рваную маску на штрихи, чтобы они повторяли контур */
       -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
       mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
       -webkit-mask-size: 100% 70px;
@@ -222,14 +222,13 @@
       margin: 0 auto;
       gap: 20px;
       position: relative;
-      z-index: 3;
+      z-index: 3; /* Контент строго поверх масок */
     }
     
-</style>
+  </style>
 </head>
 <body>
 
-  
   <!-- SVG-фильтр -->
   <svg class="svg-filter-hidden">
     <filter id="microBrush">
