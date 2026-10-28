@@ -27,31 +27,12 @@
       overflow-x: hidden;
     }
 
-    /* Скрываем сам элемент SVG-фильтра, так как он технический */
+    /* Технический скрытый контейнер для SVG-фильтра */
     .svg-filter-hidden {
       position: absolute;
       width: 0;
       height: 0;
       pointer-events: none;
-    }
-
-    /* ==========================================================
-       1. ЛОКАЛЬНЫЙ SVG-ШУМ (.noise-texture)
-       Работает через прямой SVG-фильтр (100% поддержка браузеров)
-       ========================================================== */
-    .noise-texture {
-      position: relative;
-    }
-
-    .noise-texture::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: #000;
-      filter: url(#grainNoise); /* Подключаем SVG-фильтр из HTML */
-      opacity: 0.12; /* <-- НАСТРОЙКА ИНТЕНСИВНОСТИ ШУМА (0.05 до 0.25) */
-      pointer-events: none;
-      z-index: 1;
     }
 
     /* Шапка сайта */
@@ -68,13 +49,9 @@
       font-family: serif;
       font-size: 1.2rem;
       color: var(--denim);
-      position: relative;
-      z-index: 2;
     }
 
     .header-btn {
-      position: relative;
-      z-index: 2;
       background-color: var(--butter-cream);
       border: 1px solid rgba(43, 76, 111, 0.2);
       padding: 10px 18px;
@@ -85,7 +62,7 @@
       transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
-    .header-btn:active, .header-btn:hover {
+    .header-btn:hover {
       transform: scale(0.96);
     }
 
@@ -104,13 +81,10 @@
       line-height: 1.2;
       margin-bottom: 24px;
       font-weight: 400;
-      position: relative;
-      z-index: 2;
     }
 
     .slider-container {
       position: relative;
-      z-index: 2;
       width: 100%;
       height: 480px;
       border-radius: 20px;
@@ -189,21 +163,49 @@
     }
 
     /* ==========================================================
-       2. ИЗОЛИРОВАННЫЙ MULTI-LAYER BACKGROUND (БЕЗ SVG-ШУМА)
-       Объемный текстурный фон мастихина для блока «Мой подход»
-       ========================================================== */      background-image: 
-        url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='microBrush'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9 0.12' numOctaves='3' stitchTiles='stitch' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.15  0 0 0 0 0.25  0 0 0 0 0.35  0 0 0 0.18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23microBrush)'/%3E%3C/svg%3E"),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+       ВАШ КОД ТЕКСТУРЫ С МИКРО-РАЗВОДАМИ КИСТИ
+       Применен к блоку «Мой подход»
+       ========================================================== */
+    .approach-section {
+      position: relative;
+      z-index: 5;
+      padding: 60px 20px;
+      margin-top: 40px;
+      border-radius: 24px 24px 0 0;
       
-      /* Размер плитки паттерна (делает разводы мелкими и частыми) */
-      background-size: 140px 140px, 6px 100%;
-      background-repeat: repeat, repeat;
-      background-blend-mode: overlay, normal;
+      /* Базовый цвет */
+      background-color: var(--section-bg);
       
-      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5), 0 -10px 20px rgba(0,0,0,0.03);
+      /* Используем псевдоэлемент с фильтром из HTML для надежного отображения текстуры кисти */
     }
 
-    
+    .approach-section::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: 24px 24px 0 0;
+      pointer-events: none;
+      z-index: 1;
+      
+      /* Применяем фильтр микро-разводов из HTML */
+      background-color: var(--section-bg);
+      filter: url(#microBrush);
+      opacity: 0.65; /* Регулирует общую выраженность текстуры кисти */
+    }
+
+    /* Дополнительный слой с тонкими линиями штриховки поверх текстуры */
+    .approach-section::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: 24px 24px 0 0;
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+      background-size: 6px 100%;
+      background-repeat: repeat;
+      pointer-events: none;
+      z-index: 2;
+    }
+
     .approach-content {
       display: flex;
       justify-content: space-between;
@@ -212,7 +214,7 @@
       margin: 0 auto;
       gap: 20px;
       position: relative;
-      z-index: 2;
+      z-index: 3; /* Текст и графика выше текстурных слоев */
     }
 
     .ink-tree {
@@ -224,23 +226,20 @@
 </head>
 <body>
 
-  <!-- 0. Встроенный SVG-фильтр зернистости (решает проблему блокировок браузера) -->
+  <!-- Встроенный SVG-фильтр (гарантирует отсутствие блокировок в браузерах) -->
   <svg class="svg-filter-hidden">
-    <filter id="grainNoise">
-      <!-- baseFrequency: 0.65 — идеальный масштаб зерна песка/бумаги -->
-      <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" result="noise" />
-      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0" />
+    <filter id="microBrush">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9 0.12" numOctaves="3" stitchTiles="stitch" result="noise" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.15  0 0 0 0 0.25  0 0 0 0 0.35  0 0 0 0.18 0" />
     </filter>
   </svg>
 
-  <!-- 1. Шапка с SVG-шумом -->
-  <header class="noise-texture">
+  <header>
     <div class="logo">Психолог</div>
     <button class="header-btn">Записаться</button>
   </header>
 
-  <!-- 2. Главный блок с SVG-шумом -->
-  <section class="hero-section noise-texture">
+  <section class="hero-section">
     <h1>Смотреть на человека целостно</h1>
     
     <div class="slider-container">
@@ -256,7 +255,7 @@
     </div>
   </section>
 
-  <!-- 3. Блок "Мой подход" БЕЗ SVG-шума (ТОЛЬКО объемный многослойный градиент-мастихин) -->
+  <!-- Секция "Мой подход" с вашей текстурой микро-разводов кисти -->
   <section class="approach-section">
     <div class="approach-content">
       <div>
