@@ -128,7 +128,7 @@
       position: absolute;
       top: -10px;
       bottom: -10px;
-      width: 100vw; /* Растяжение шлейфа на всю ширину экрана */
+      width: 5vw; /* Растяжение шлейфа на всю ширину экрана */
       pointer-events: none;
       z-index: 1;
       opacity: 0.9;
@@ -136,28 +136,18 @@
       transition: all 1.2s ease-in-out;
     }
 
-    /* Левый шлейф: вытягивается из левого края фотографии и сливается с белым фоном сайта (#FFFFFF) */
+   /* Левый шлейф на основе трех точек */
     .slide::before {
       right: 98%;
-      background: linear-gradient(
-        to left,
-        var(--left-color, rgba(42, 47, 43, 0.8)) 0%,
-        var(--left-accent, rgba(42, 47, 43, 0.4)) 35%,
-        rgba(255, 255, 255, 0) 100%
-      );
+      background: var(--left-grad, linear-gradient(to left, rgba(42, 47, 43, 0.8) 0%, rgba(255, 255, 255, 0) 100%));
     }
 
-    /* Правый шлейф: вытягивается из правого края фотографии и сливается с белым фоном сайта (#FFFFFF) */
+    /* Правый шлейф на основе трех точек */
     .slide::after {
       left: 98%;
-      background: linear-gradient(
-        to right,
-        var(--right-color, rgba(234, 230, 220, 0.9)) 0%,
-        var(--right-accent, rgba(200, 180, 147, 0.5)) 35%,
-        rgba(255, 255, 255, 0) 100%
-      );
+      background: var(--right-grad, linear-gradient(to right, rgba(234, 230, 220, 0.9) 0%, rgba(255, 255, 255, 0) 100%));
     }
-
+    
     /* Пагинация */
     .timer-pagination {
       position: absolute;
@@ -410,16 +400,22 @@
       let currentIndex = 0;
       let intervalId;
 
-      // Функция сэмплирования цвета кромок фотографии через Canvas
+    <!-- Скрипт: Детекция цвета Canvas в трех точках (0% CPU) + Автоматическое переключение -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const slides = document.querySelectorAll(".slide");
+      const dots = document.querySelectorAll(".dot-indicator");
+      let currentIndex = 0;
+      let intervalId;
+
+      // Новая функция сэмплирования цвета кромок в трех точках (верх, середина, низ)
       function extractEdgeColors(slide) {
         const img = slide.querySelector("img");
         if (!img) return;
 
-        const setColors = (left, leftAcc, right, rightAcc) => {
-          slide.style.setProperty("--left-color", left);
-          slide.style.setProperty("--left-accent", leftAcc);
-          slide.style.setProperty("--right-color", right);
-          slide.style.setProperty("--right-accent", rightAcc);
+        const setColors = (colors) => {
+          slide.style.setProperty("--left-grad", `linear-gradient(to left, ${colors.leftMid} 0%, ${colors.leftTop} 50%, rgba(255,255,255,0) 100%)`);
+          slide.style.setProperty("--right-grad", `linear-gradient(to right, ${colors.rightMid} 0%, ${colors.rightBottom} 50%, rgba(255,255,255,0) 100%)`);
         };
 
         const processImage = () => {
@@ -430,29 +426,71 @@
             canvas.height = img.naturalHeight || 450;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-            // Сэмплирование левого и правого краев
-            const leftData = ctx.getImageData(5, Math.floor(canvas.height / 2), 1, 1).data;
-            const rightData = ctx.getImageData(canvas.width - 5, Math.floor(canvas.height / 2), 1, 1).data;
+            const h = canvas.height;
+            const w = canvas.width;
 
-            const leftColor = `rgba(${leftData[0]}, ${leftData[1]}, ${leftData[2]}, 0.85)`;
-            const rightColor = `rgba(${rightData[0]}, ${rightData[1]}, ${rightData[2]}, 0.85)`;
+            const getPixel = (x, y) => {
+              const d = ctx.getImageData(x, y, 1, 1).data;
+              return `rgba(${d[0]}, ${d[1]}, ${d[2]}, 0.85)`;
+            };
 
-            setColors(
-              leftColor,
-              slide.dataset.leftAccent || leftColor,
-              rightColor,
-              slide.dataset.rightAccent || rightColor
-            );
+            const colors = {
+              leftTop: getPixel(5, Math.floor(h * 0.2)),
+              leftMid: getPixel(5, Math.floor(h * 0.5)),
+              leftBottom: getPixel(5, Math.floor(h * 0.8)),
+              rightTop: getPixel(w - 5, Math.floor(h * 0.2)),
+              rightMid: getPixel(w - 5, Math.floor(h * 0.5)),
+              rightBottom: getPixel(w - 5, Math.floor(h * 0.8))
+            };
+
+            setColors(colors);
           } catch (e) {
-            // Резервный переход на предварительный цветовой анализ при ограничении CORS
-            setColors(
-              slide.dataset.leftFallback,
-              slide.dataset.leftAccent,
-              slide.dataset.rightFallback,
-              slide.dataset.rightAccent
-            );
+            // Резервный вариант при ограничениях CORS
+            slide.style.setProperty("--left-grad", `linear-gradient(to left, ${slide.dataset.leftFallback} 0%, rgba(255,255,255,0) 100%)`);
+            slide.style.setProperty("--right-grad", `linear-gradient(to right, ${slide.dataset.rightFallback} 0%, rgba(255,255,255,0) 100%)`);
           }
         };
+
+        if (img.complete && img.naturalWidth !== 0) {
+          processImage();
+        } else {
+          img.addEventListener("load", processImage);
+        }
+      }
+
+      // Инициализация шлейфов для всех фотографий
+      slides.forEach(slide => extractEdgeColors(slide));
+
+      function goToSlide(nextIndex) {
+        if (nextIndex === currentIndex) return;
+
+        slides[currentIndex].classList.remove("active");
+        dots[currentIndex].classList.remove("active");
+
+        slides[nextIndex].classList.add("active");
+        dots[nextIndex].classList.add("active");
+
+        currentIndex = nextIndex;
+      }
+
+      function startAutoplay() {
+        intervalId = setInterval(() => {
+          const nextIndex = (currentIndex + 1) % slides.length;
+          goToSlide(nextIndex);
+        }, 10000);
+      }
+
+      dots.forEach((dot, index) => {
+        dot.addEventListener("click", () => {
+          clearInterval(intervalId);
+          goToSlide(index);
+          startAutoplay();
+        });
+      });
+
+      startAutoplay();
+    });
+  </script>
 
         if (img.complete && img.naturalWidth !== 0) {
           processImage();
