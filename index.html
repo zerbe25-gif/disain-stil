@@ -165,36 +165,45 @@
     /* ==========================================================
        СЕКЦИЯ «МОЙ ПОДХОД» С ПЛАВНЫМ РАЗМЫТЫМ ПЕРЕХОДОМ
        ========================================================== */
-    .approach-section {
-  position: relative;
-  z-index: 5;
-  padding: 60px 20px;
-  margin-top: 40px;
-  border-radius: 40px 40px 0 0; /* Более мягкие, глубокие закругления */
-}
+  .approach-section {
+      position: relative;
+      z-index: 5;
+      padding: 70px 20px 60px 20px;
+      margin-top: -20px; /* Сдвигаем блок чуть выше, чтобы он объединился с верхом */
+      
+      /* Базовый цвет голубой секции */
+      background-color: var(--section-bg);
+      
+      /* Скругляем только верхние углы для плавности */
+      border-radius: 45px 45px 0 0;
+      
+      /* Текстура микро-разводов кисти (ваш фильтр) */
+    }
 
-/* Мягкая светотень-растушевка на границе стыка */
-.approach-section::before {
-  box-shadow: 0 -25px 35px -5px rgba(216, 227, 233, 0.9); /* Голубая дымка вверх */
-}
-
-    /* Текстурный слой с фильтром кисти */
+    /* 1. Эффект растушевки и дымки на границе */
     .approach-section::before {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: 45px 45px 0 0;
       pointer-events: none;
       z-index: 1;
+      
+      /* Главная магия размытия: объемная тень цвета секции, направленная вверх */
+      box-shadow: 0 -30px 40px 5px rgba(216, 227, 233, 0.85);
+      
+      /* Накладываем ваш фильтр микро-кисти поверх */
       background-color: var(--section-bg);
       filter: url(#microBrush);
-      opacity: 0.65;
+      opacity: 0.6;
     }
 
-    /* Тонкие штрихи */
+    /* 2. Тонкие вертикальные штрихи */
     .approach-section::after {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: 45px 45px 0 0;
       background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
       background-size: 6px 100%;
       background-repeat: repeat;
@@ -210,17 +219,8 @@
       margin: 0 auto;
       gap: 20px;
       position: relative;
-      z-index: 3;
+      z-index: 3; /* Контент строго поверх теней и текстур */
     }
-
-    .ink-tree {
-      width: 140px;
-      height: 200px;
-      flex-shrink: 0;
-    }
-  </style>
-</head>
-<body>
 
   <!-- SVG-фильтр -->
   <svg class="svg-filter-hidden">
