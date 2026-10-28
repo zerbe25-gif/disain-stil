@@ -68,7 +68,7 @@
 
     /* Главный блок / Слайдер */
     .hero-section {
-      padding: 40px 20px 60px 20px;
+      padding: 40px 20px;
       max-width: 600px;
       margin: 0 auto;
       text-align: center;
@@ -163,55 +163,47 @@
     }
 
     /* ==========================================================
-       СЕКЦИЯ «МОЙ ПОДХОД» С ПЛАВНЫМ РАЗМЫТЫМ ПЕРЕХОДОМ
+       ВАШ КОД ТЕКСТУРЫ С МИКРО-РАЗВОДАМИ КИСТИ
+       Применен к блоку «Мой подход»
        ========================================================== */
     .approach-section {
       position: relative;
       z-index: 5;
-      padding: 90px 20px 60px 20px;
-      margin-top: -40px; /* Заходим на предыдущую секцию */
+      padding: 60px 20px;
+      margin-top: 40px;
+      border-radius: 24px 24px 0 0;
+      
+      /* Базовый цвет */
       background-color: var(--section-bg);
+      
+      /* Используем псевдоэлемент с фильтром из HTML для надежного отображения текстуры кисти */
     }
 
-    /* 1. Текстура кисти с РВАНЫМ краем мастихина */
     .approach-section::before {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: 24px 24px 0 0;
       pointer-events: none;
       z-index: 1;
       
+      /* Применяем фильтр микро-разводов из HTML */
       background-color: var(--section-bg);
       filter: url(#microBrush);
-      opacity: 0.65;
-      
-      /* SVG-маска с турбулентностью создает рваный, неровный край сверху */
-      -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
-      mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
-      -webkit-mask-size: 100% 70px;
-      mask-size: 100% 70px;
-      -webkit-mask-repeat: repeat-x;
-      mask-repeat: repeat-x;
+      opacity: 0.65; /* Регулирует общую выраженность текстуры кисти */
     }
 
-    /* 2. Тонкие штрихи поверх текстуры */
+    /* Дополнительный слой с тонкими линиями штриховки поверх текстуры */
     .approach-section::after {
       content: "";
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
+      border-radius: 24px 24px 0 0;
       background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px);
       background-size: 6px 100%;
       background-repeat: repeat;
       pointer-events: none;
       z-index: 2;
-      
-      /* Дублируем рваную маску на штрихи, чтобы они повторяли контур */
-      -webkit-mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
-      mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='edgeNoise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.08 0.4' numOctaves='3' result='noise'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 3 -1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23edgeNoise)' fill='black'/%3E%3C/svg%3E");
-      -webkit-mask-size: 100% 70px;
-      mask-size: 100% 70px;
-      -webkit-mask-repeat: repeat-x;
-      mask-repeat: repeat-x;
     }
 
     .approach-content {
@@ -222,14 +214,19 @@
       margin: 0 auto;
       gap: 20px;
       position: relative;
-      z-index: 3; /* Контент строго поверх масок */
+      z-index: 3; /* Текст и графика выше текстурных слоев */
     }
-    
+
+    .ink-tree {
+      width: 140px;
+      height: 200px;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
 
-  <!-- SVG-фильтр -->
+  <!-- Встроенный SVG-фильтр (гарантирует отсутствие блокировок в браузерах) -->
   <svg class="svg-filter-hidden">
     <filter id="microBrush">
       <feTurbulence type="fractalNoise" baseFrequency="0.9 0.12" numOctaves="3" stitchTiles="stitch" result="noise" />
@@ -258,7 +255,7 @@
     </div>
   </section>
 
-  <!-- Секция с градиентным размытым верхним краем -->
+  <!-- Секция "Мой подход" с вашей текстурой микро-разводов кисти -->
   <section class="approach-section">
     <div class="approach-content">
       <div>
